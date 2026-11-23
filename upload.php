@@ -5,6 +5,31 @@ session_start();
 $isUploadPostRequest = ($_SERVER["REQUEST_METHOD"] ?? "") === "POST";
 $isAjaxUploadRequest = $isUploadPostRequest &&
     (string) ($_POST["ajax_upload"] ?? "") === "1";
+$expectedUploadCountHeader = trim(
+    (string) ($_SERVER["HTTP_X_EXPECTED_UPLOAD_COUNT"] ?? "")
+);
+$expectedUploadCount = ctype_digit($expectedUploadCountHeader)
+    ? (int) $expectedUploadCountHeader
+    : 0;
+
+if (
+    $isUploadPostRequest &&
+    $expectedUploadCount > 0 &&
+    !$isAjaxUploadRequest
+) {
+    session_write_close();
+    http_response_code(413);
+    header("Content-Type: application/json; charset=utf-8");
+    echo json_encode([
+        "status" => "error",
+        "message" => sprintf(
+            "PHP did not receive the upload request. It may exceed the current post_max_size (%s). Increase the upload limits in C:\\xampp\\php\\php.ini and restart Apache.",
+            (string) ini_get("post_max_size")
+        )
+    ]);
+    exit();
+}
+
 $isLocalDevelopment = in_array(
     strtolower((string) ($_SERVER["SERVER_NAME"] ?? "")),
     ["localhost", "127.0.0.1", "::1"],
@@ -61,6 +86,7 @@ $completedImageIds = [];
 $completionImageIds = [];
 $uploadImageTotal = 0;
 $uploadPreparationFailures = 0;
+$batchManifestEntries = [];
 
 if (isset($_SESSION["flash_message"])) {
     $message = $_SESSION["flash_message"];
@@ -100,35 +126,179 @@ if (!$isUploadPostRequest) {
 }
 
 $uploadProgressToken = "";
+$uploadSessionId = "";
+$uploadBatchIndex = 1;
+$uploadTotalBatches = 1;
+$uploadBatchStartIndex = 0;
+$overallSelectedCount = 0;
+$batchExpectedFileCount = 0;
+$uploadBatchState = [];
 if ($isAjaxUploadRequest) {
     $uploadProgressToken = trim(
         (string) ($_POST["upload_progress_token"] ?? "")
     );
+    $uploadSessionId = trim((string) ($_POST["upload_session_id"] ?? ""));
+    $uploadBatchIndex = filter_var(
+        $_POST["batch_index"] ?? null,
+        FILTER_VALIDATE_INT
+    );
+    $uploadTotalBatches = filter_var(
+        $_POST["total_batches"] ?? null,
+        FILTER_VALIDATE_INT
+    );
+    $uploadBatchStartIndex = filter_var(
+        $_POST["batch_start_index"] ?? null,
+        FILTER_VALIDATE_INT
+    );
+    $overallSelectedCount = filter_var(
+        $_POST["overall_total"] ?? null,
+        FILTER_VALIDATE_INT
+    );
+    $batchExpectedFileCount = filter_var(
+        $_POST["batch_file_count"] ?? null,
+        FILTER_VALIDATE_INT
+    );
     $formTokens = $_SESSION["upload_progress_form_tokens"] ?? [];
+    $batchSessions = $_SESSION["upload_batch_sessions"] ?? [];
+    if (!is_array($batchSessions)) {
+        $batchSessions = [];
+    }
 
-    if (
-        preg_match('/^[a-f0-9]{32}$/', $uploadProgressToken) !== 1 ||
-        !is_array($formTokens) ||
-        !isset($formTokens[$uploadProgressToken])
-    ) {
+    $validBatchMetadata =
+        preg_match('/^[a-f0-9]{32}$/', $uploadSessionId) === 1 &&
+        is_int($uploadBatchIndex) &&
+        is_int($uploadTotalBatches) &&
+        is_int($uploadBatchStartIndex) &&
+        is_int($overallSelectedCount) &&
+        is_int($batchExpectedFileCount) &&
+        $uploadBatchIndex >= 1 &&
+        $uploadTotalBatches >= 1 &&
+        $uploadBatchIndex <= $uploadTotalBatches &&
+        $uploadBatchStartIndex >= 0 &&
+        $overallSelectedCount >= 1 &&
+        $batchExpectedFileCount >= 1 &&
+        $batchExpectedFileCount <= 15 &&
+        $uploadBatchStartIndex + $batchExpectedFileCount <= $overallSelectedCount &&
+        $expectedUploadCount === $batchExpectedFileCount;
+
+    $uploadBatchState = $batchSessions[$uploadSessionId] ?? null;
+    $isFirstBatch = !is_array($uploadBatchState);
+    $validToken = preg_match('/^[a-f0-9]{32}$/', $uploadProgressToken) === 1 &&
+        is_array($formTokens) &&
+        isset($formTokens[$uploadProgressToken]);
+    $validBatchSequence = $isFirstBatch
+        ? ($uploadBatchIndex === 1 && $uploadBatchStartIndex === 0 && $validToken)
+        : (
+            is_array($uploadBatchState) &&
+            ($uploadBatchState["token"] ?? "") === $uploadProgressToken &&
+            (int) ($uploadBatchState["next_batch"] ?? 0) === $uploadBatchIndex &&
+            (int) ($uploadBatchState["next_file_index"] ?? -1) === $uploadBatchStartIndex &&
+            (int) ($uploadBatchState["total_batches"] ?? 0) === $uploadTotalBatches &&
+            (int) ($uploadBatchState["overall_total"] ?? 0) === $overallSelectedCount
+        );
+
+    if (!$validBatchMetadata || !$validBatchSequence) {
         http_response_code(400);
         header("Content-Type: application/json; charset=utf-8");
         echo json_encode([
             "status" => "error",
-            "message" => "The upload session expired. Refresh the page and try again."
+            "message" => "The upload batch is invalid or out of sequence. Refresh the page and try again."
         ]);
         exit();
     }
 
-    unset($_SESSION["upload_progress_form_tokens"][$uploadProgressToken]);
+    if ($isFirstBatch) {
+        unset($_SESSION["upload_progress_form_tokens"][$uploadProgressToken]);
+        $uploadBatchState = [
+            "token" => $uploadProgressToken,
+            "total_batches" => $uploadTotalBatches,
+            "overall_total" => $overallSelectedCount,
+            "next_batch" => 1,
+            "next_file_index" => 0,
+            "processed_total" => 0,
+            "success_count" => 0,
+            "failed_count" => 0,
+            "completed_image_ids" => [],
+            "updated_at" => time()
+        ];
+    }
+
+    $batchSessions[$uploadSessionId] = $uploadBatchState;
+    $_SESSION["upload_batch_sessions"] = $batchSessions;
+    $batchBaseCurrent = (int) ($uploadBatchState["processed_total"] ?? 0);
+    $batchBaseSuccessCount = (int) ($uploadBatchState["success_count"] ?? 0);
+    $batchBaseFailedCount = (int) ($uploadBatchState["failed_count"] ?? 0);
+    $batchRemainingCount = max(
+        0,
+        $overallSelectedCount -
+            ($uploadBatchStartIndex + $batchExpectedFileCount)
+    );
+
     storeUploadProgress($uploadProgressToken, [
         "status" => "preparing",
         "current" => 0,
-        "total" => 0,
-        "success_count" => 0,
-        "failed_count" => 0,
-        "message" => ""
+        "total" => $batchExpectedFileCount,
+        "base_current" => $batchBaseCurrent,
+        "remaining_count" => $batchRemainingCount,
+        "overall_total" => $overallSelectedCount,
+        "batch_index" => $uploadBatchIndex,
+        "total_batches" => $uploadTotalBatches,
+        "batch_start_index" => $uploadBatchStartIndex,
+        "success_count" => $batchBaseSuccessCount,
+        "failed_count" => $batchBaseFailedCount,
+        "message" => sprintf(
+            "Preparing batch %d of %d...",
+            $uploadBatchIndex,
+            $uploadTotalBatches
+        )
     ]);
+}
+
+if ($isAjaxUploadRequest && $batchExpectedFileCount > 0) {
+    $receivedUploadCount = isset($_FILES["plantation_image"]["name"])
+        ? (is_array($_FILES["plantation_image"]["name"])
+            ? count($_FILES["plantation_image"]["name"])
+            : 1)
+        : 0;
+
+    if ($receivedUploadCount !== $batchExpectedFileCount) {
+        $uploadCountError = sprintf(
+            "PHP received %d of %d files in upload batch %d. No files in this batch were processed. Check max_file_uploads (%s) and post_max_size (%s).",
+            $receivedUploadCount,
+            $batchExpectedFileCount,
+            $uploadBatchIndex,
+            (string) ini_get("max_file_uploads"),
+            (string) ini_get("post_max_size")
+        );
+        storeUploadProgress($uploadProgressToken, [
+            "status" => "configuration_error",
+            "current" => 0,
+            "total" => $batchExpectedFileCount,
+            "base_current" => $batchBaseCurrent,
+            "remaining_count" => $batchRemainingCount,
+            "overall_total" => $overallSelectedCount,
+            "batch_index" => $uploadBatchIndex,
+            "total_batches" => $uploadTotalBatches,
+            "batch_start_index" => $uploadBatchStartIndex,
+            "success_count" => $batchBaseSuccessCount,
+            "failed_count" => $batchBaseFailedCount,
+            "message" => $uploadCountError
+        ]);
+        if (session_status() !== PHP_SESSION_ACTIVE && !session_start()) {
+            throw new RuntimeException("Could not save the upload error.");
+        }
+        unset($_SESSION["upload_batch_sessions"][$uploadSessionId]);
+        $_SESSION["flash_message"] = $uploadCountError;
+        $_SESSION["flash_type"] = "error";
+        session_write_close();
+        http_response_code(400);
+        header("Content-Type: application/json; charset=utf-8");
+        echo json_encode([
+            "status" => "error",
+            "message" => $uploadCountError
+        ]);
+        exit();
+    }
 }
 
 /**
@@ -516,9 +686,19 @@ if ($isAjaxUploadRequest) {
         "status" => "preparing",
         "current" => 0,
         "total" => $uploadImageTotal,
-        "success_count" => 0,
-        "failed_count" => 0,
-        "message" => ""
+        "base_current" => $batchBaseCurrent,
+        "remaining_count" => $batchRemainingCount,
+        "overall_total" => $overallSelectedCount,
+        "batch_index" => $uploadBatchIndex,
+        "total_batches" => $uploadTotalBatches,
+        "batch_start_index" => $uploadBatchStartIndex,
+        "success_count" => $batchBaseSuccessCount,
+        "failed_count" => $batchBaseFailedCount,
+        "message" => sprintf(
+            "Preparing batch %d of %d...",
+            $uploadBatchIndex,
+            $uploadTotalBatches
+        )
     ]);
 }
 
@@ -529,8 +709,15 @@ foreach ($uploadedFiles as $imageIndex => $file) {
             "status" => "processing",
             "current" => $imageIndex + 1,
             "total" => $uploadImageTotal,
-            "success_count" => count($completedImageIds),
-            "failed_count" => max(0, $imageIndex - count($completedImageIds)),
+            "base_current" => $batchBaseCurrent,
+            "remaining_count" => $batchRemainingCount,
+            "overall_total" => $overallSelectedCount,
+            "batch_index" => $uploadBatchIndex,
+            "total_batches" => $uploadTotalBatches,
+            "batch_start_index" => $uploadBatchStartIndex,
+            "success_count" => $batchBaseSuccessCount + count($completedImageIds),
+            "failed_count" => $batchBaseFailedCount +
+                max(0, $imageIndex - count($completedImageIds)),
             "message" => ""
         ]);
     }
@@ -682,6 +869,14 @@ foreach ($uploadedFiles as $imageIndex => $file) {
                                 );
                             }
 
+                            $batchManifestEntries[] = [
+                                "image_id" => $imageId,
+                                "image_path" => $absoluteFilePath,
+                                "zone" => $zoneId
+                            ];
+
+                            if (false) {
+
                             $pythonPath = __DIR__ . DIRECTORY_SEPARATOR . "venv"
                                 . DIRECTORY_SEPARATOR . "Scripts"
                                 . DIRECTORY_SEPARATOR . "python.exe";
@@ -716,7 +911,7 @@ foreach ($uploadedFiles as $imageIndex => $file) {
                                 $pythonReturnCode = 0;
 
                                 $pythonStartedAt = microtime(true);
-                                exec($command, $pythonOutput, $pythonReturnCode);
+                                $pythonReturnCode = 1;
                                 $pythonProcessSeconds =
                                     microtime(true) - $pythonStartedAt;
 
@@ -966,6 +1161,7 @@ foreach ($uploadedFiles as $imageIndex => $file) {
                                 }
                             }
                         }
+                            }
 
                         mysqli_stmt_close($insertImage);
 
@@ -974,6 +1170,256 @@ foreach ($uploadedFiles as $imageIndex => $file) {
                 }
             }
         }
+    }
+}
+
+if ($batchManifestEntries !== []) {
+    if ($isAjaxUploadRequest) {
+        storeUploadProgress($uploadProgressToken, [
+            "status" => "processing",
+            "current" => 0,
+            "total" => count($batchManifestEntries),
+            "base_current" => $batchBaseCurrent,
+            "remaining_count" => $batchRemainingCount,
+            "overall_total" => $overallSelectedCount,
+            "batch_index" => $uploadBatchIndex,
+            "total_batches" => $uploadTotalBatches,
+            "batch_start_index" => $uploadBatchStartIndex,
+            "success_count" => $batchBaseSuccessCount,
+            "failed_count" => $batchBaseFailedCount,
+            "message" => sprintf(
+                "Running DeepLabV3+ analysis on batch %d of %d (%d images)...",
+                $uploadBatchIndex,
+                $uploadTotalBatches,
+                count($batchManifestEntries)
+            )
+        ]);
+    }
+
+    $manifestPath = tempnam(sys_get_temp_dir(), "inspector_weeds_batch_");
+    $manifestSaved = $manifestPath !== false &&
+        file_put_contents(
+            $manifestPath,
+            json_encode($batchManifestEntries, JSON_UNESCAPED_SLASHES)
+        ) !== false;
+
+    $pythonPath = __DIR__ . DIRECTORY_SEPARATOR . "venv"
+        . DIRECTORY_SEPARATOR . "Scripts"
+        . DIRECTORY_SEPARATOR . "python.exe";
+    $scriptPath = __DIR__ . DIRECTORY_SEPARATOR . "run_inference_deeplab.py";
+
+    if ($manifestSaved && file_exists($pythonPath) && file_exists($scriptPath)) {
+        $command =
+            escapeshellarg($pythonPath) . " " .
+            escapeshellarg($scriptPath) . " " .
+            "--batch-manifest " . escapeshellarg($manifestPath) .
+            " --batch-size 4 2>&1";
+
+        $pythonOutput = [];
+        $pythonReturnCode = 0;
+        exec($command, $pythonOutput, $pythonReturnCode);
+        $batchAnalysis = extractPythonJson($pythonOutput);
+
+        $analysisResults = is_array($batchAnalysis)
+            ? (array) ($batchAnalysis["results"] ?? [])
+            : [];
+        $processedBatchIds = [];
+
+        foreach ($analysisResults as $analysis) {
+            if (!is_array($analysis)) {
+                continue;
+            }
+
+            $imageId = (string) ($analysis["image_id"] ?? "");
+            if ($imageId === "") {
+                continue;
+            }
+            $processedBatchIds[$imageId] = true;
+
+            if (($analysis["status"] ?? "") !== "success") {
+                $failedStatus = mysqli_prepare(
+                    $conn,
+                    "UPDATE images SET analysis_status = 'Failed' WHERE image_id = ?"
+                );
+                if ($failedStatus) {
+                    mysqli_stmt_bind_param($failedStatus, "s", $imageId);
+                    mysqli_stmt_execute($failedStatus);
+                    mysqli_stmt_close($failedStatus);
+                }
+                error_log(
+                    "Inspector Weeds inference failed for {$imageId}: " .
+                    (string) ($analysis["error"] ?? "Unknown inference error")
+                );
+                continue;
+            }
+
+            $processedImagePath = (string) ($analysis["processed_image_path"] ?? "");
+            $maskImagePath = (string) ($analysis["mask_path"] ?? "");
+            $modelUsed = (string) ($analysis["model_used"] ?? "DeepLabV3+");
+
+            $severityRaw = strtoupper((string) ($analysis["severity_level"] ?? "LOW"));
+            $severity = $severityRaw === "HIGH" ? "High" : "Low";
+            $weedCoverage = (float) ($analysis["weed_coverage"] ?? 0);
+            $weedPixels = (int) ($analysis["weed_pixels"] ?? 0);
+            $totalPixels = (int) ($analysis["total_pixels"] ?? 0);
+            $averageConfidence = (float) ($analysis["confidence_score"] ?? 0);
+
+            $zoneId = "Unknown";
+            foreach ($batchManifestEntries as $manifestEntry) {
+                if ((string) ($manifestEntry["image_id"] ?? "") === $imageId) {
+                    $zoneId = (string) ($manifestEntry["zone"] ?? "Unknown");
+                    break;
+                }
+            }
+            if ($zoneId === "Unknown") {
+                $pythonZone = (string) ($analysis["zone"] ?? "Unknown");
+                if ($pythonZone !== "Unknown") {
+                    $zoneId = $pythonZone;
+                }
+            }
+
+            mysqli_begin_transaction($conn);
+            try {
+                $updateImage = mysqli_prepare(
+                    $conn,
+                    "
+                    UPDATE images
+                    SET processed_image_path = ?,
+                        mask_image_path = ?,
+                        zone_id = ?,
+                        model_used = ?,
+                        analysis_status = 'Completed'
+                    WHERE image_id = ?
+                    "
+                );
+                if (!$updateImage) {
+                    throw new Exception(mysqli_error($conn));
+                }
+
+                mysqli_stmt_bind_param(
+                    $updateImage,
+                    "sssss",
+                    $processedImagePath,
+                    $maskImagePath,
+                    $zoneId,
+                    $modelUsed,
+                    $imageId
+                );
+                if (!mysqli_stmt_execute($updateImage)) {
+                    throw new Exception(mysqli_stmt_error($updateImage));
+                }
+                mysqli_stmt_close($updateImage);
+
+                $insertResult = mysqli_prepare(
+                    $conn,
+                    "
+                    INSERT INTO detection_results (
+                        image_id,
+                        image_file,
+                        zone_id,
+                        severity_level,
+                        weed_coverage,
+                        weed_pixels,
+                        total_pixels,
+                        average_confidence,
+                        processed_image_path,
+                        mask_image_path,
+                        model_used
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    "
+                );
+                if (!$insertResult) {
+                    throw new Exception(mysqli_error($conn));
+                }
+
+                $fileName = $imageId . ".jpg";
+                foreach ($batchManifestEntries as $manifestEntry) {
+                    if ((string) ($manifestEntry["image_id"] ?? "") === $imageId) {
+                        $manifestPathForImage = (string) $manifestEntry["image_path"];
+                        $fileName = basename($manifestPathForImage);
+                        break;
+                    }
+                }
+
+                mysqli_stmt_bind_param(
+                    $insertResult,
+                    "ssssdiidsss",
+                    $imageId,
+                    $fileName,
+                    $zoneId,
+                    $severity,
+                    $weedCoverage,
+                    $weedPixels,
+                    $totalPixels,
+                    $averageConfidence,
+                    $processedImagePath,
+                    $maskImagePath,
+                    $modelUsed
+                );
+                if (!mysqli_stmt_execute($insertResult)) {
+                    throw new Exception(mysqli_stmt_error($insertResult));
+                }
+                mysqli_stmt_close($insertResult);
+                mysqli_commit($conn);
+                $completedImageIds[] = $imageId;
+            } catch (Throwable $error) {
+                mysqli_rollback($conn);
+                error_log(
+                    "Inspector Weeds analysis result save failed for {$imageId}: " .
+                    $error->getMessage()
+                );
+                $failedStatus = mysqli_prepare(
+                    $conn,
+                    "UPDATE images SET analysis_status = 'Failed' WHERE image_id = ?"
+                );
+                if ($failedStatus) {
+                    mysqli_stmt_bind_param($failedStatus, "s", $imageId);
+                    mysqli_stmt_execute($failedStatus);
+                    mysqli_stmt_close($failedStatus);
+                }
+            }
+        }
+
+        foreach ($batchManifestEntries as $manifestEntry) {
+            $imageId = (string) $manifestEntry["image_id"];
+            if (isset($processedBatchIds[$imageId])) {
+                continue;
+            }
+            $failedStatus = mysqli_prepare(
+                $conn,
+                "UPDATE images SET analysis_status = 'Failed' WHERE image_id = ?"
+            );
+            if ($failedStatus) {
+                mysqli_stmt_bind_param($failedStatus, "s", $imageId);
+                mysqli_stmt_execute($failedStatus);
+                mysqli_stmt_close($failedStatus);
+            }
+        }
+
+        if ($pythonReturnCode !== 0 && $analysisResults === []) {
+            error_log(
+                "Inspector Weeds batch inference failed. Python return code: " .
+                $pythonReturnCode . "\n" . implode("\n", $pythonOutput)
+            );
+        }
+    } else {
+        error_log("Inspector Weeds batch inference could not be started.");
+        foreach ($batchManifestEntries as $manifestEntry) {
+            $imageId = (string) $manifestEntry["image_id"];
+            $failedStatus = mysqli_prepare(
+                $conn,
+                "UPDATE images SET analysis_status = 'Failed' WHERE image_id = ?"
+            );
+            if ($failedStatus) {
+                mysqli_stmt_bind_param($failedStatus, "s", $imageId);
+                mysqli_stmt_execute($failedStatus);
+                mysqli_stmt_close($failedStatus);
+            }
+        }
+    }
+
+    if ($manifestPath !== false) {
+        @unlink($manifestPath);
     }
 }
 
@@ -987,39 +1433,148 @@ if ($redirectAfterPost || $isAjaxUploadRequest) {
         throw new RuntimeException("Could not save the upload results.");
     }
 
-    $successCount = count($completedImageIds);
-    $failedImageCount = max(0, $uploadImageTotal - $successCount);
-    $failedCount = $failedImageCount + $uploadPreparationFailures;
+    $batchSuccessCount = count($completedImageIds);
+    $batchFailedCount =
+        max(0, $uploadImageTotal - $batchSuccessCount) +
+        $uploadPreparationFailures;
+    $batchResultTotal = $batchSuccessCount + $batchFailedCount;
 
-    if ($uploadImageTotal > 0) {
-        if ($failedImageCount > 0) {
+    if ($isAjaxUploadRequest) {
+        $batchSessions = $_SESSION["upload_batch_sessions"] ?? [];
+        $logicalSession = $batchSessions[$uploadSessionId] ?? null;
+        if (!is_array($logicalSession)) {
+            throw new RuntimeException("The upload batch session could not be found.");
+        }
+
+        $logicalSession["success_count"] =
+            (int) ($logicalSession["success_count"] ?? 0) + $batchSuccessCount;
+        $logicalSession["failed_count"] =
+            (int) ($logicalSession["failed_count"] ?? 0) + $batchFailedCount;
+        $logicalSession["processed_total"] =
+            (int) ($logicalSession["processed_total"] ?? 0) + $batchResultTotal;
+        $logicalSession["completed_image_ids"] = array_values(array_unique(array_merge(
+            (array) ($logicalSession["completed_image_ids"] ?? []),
+            $completedImageIds
+        )));
+        $logicalSession["next_batch"] = $uploadBatchIndex + 1;
+        $logicalSession["next_file_index"] =
+            $uploadBatchStartIndex + $batchExpectedFileCount;
+        $logicalSession["updated_at"] = time();
+        $batchSessions[$uploadSessionId] = $logicalSession;
+        $_SESSION["upload_batch_sessions"] = $batchSessions;
+
+        $successCount = (int) $logicalSession["success_count"];
+        $failedCount = (int) $logicalSession["failed_count"];
+        $overallImageTotal = $successCount + $failedCount;
+        $allCompletedImageIds = $logicalSession["completed_image_ids"];
+        $isFinalBatch = $uploadBatchIndex === $uploadTotalBatches;
+
+        if (!$isFinalBatch) {
             $uploadProgressMessage = sprintf(
+                "Batch %d of %d complete. Preparing the next batch...",
+                $uploadBatchIndex,
+                $uploadTotalBatches
+            );
+            $_SESSION["upload_progress"][$uploadProgressToken] = [
+                "status" => "preparing",
+                "current" => $overallImageTotal,
+                "total" => $overallImageTotal,
+                "base_current" => 0,
+                "remaining_count" => max(
+                    0,
+                    $overallSelectedCount - $logicalSession["next_file_index"]
+                ),
+                "overall_total" => $overallSelectedCount,
+                "batch_index" => $uploadBatchIndex + 1,
+                "total_batches" => $uploadTotalBatches,
+                "batch_start_index" => $logicalSession["next_file_index"],
+                "success_count" => $successCount,
+                "failed_count" => $failedCount,
+                "message" => $uploadProgressMessage,
+                "updated_at" => time()
+            ];
+        } else {
+            if ($failedCount > 0) {
+                $uploadProgressMessage = sprintf(
+                    "%d of %d images analysed successfully. %d %s failed.",
+                    $successCount,
+                    $overallImageTotal,
+                    $failedCount,
+                    $failedCount === 1 ? "image" : "images"
+                );
+            } elseif ($successCount === 0) {
+                $uploadProgressMessage = $message !== ""
+                    ? $message
+                    : "No supported images were found. Please upload JPG, PNG or WEBP files.";
+            } else {
+                $uploadProgressMessage = $successCount === 1
+                    ? "Image analysed successfully."
+                    : sprintf("%d images analysed successfully.", $successCount);
+            }
+
+            $_SESSION["upload_completion_image_ids"] = $allCompletedImageIds;
+            $_SESSION["latest_analysis_batch_ids"] = $allCompletedImageIds;
+            if ($failedCount === 0 && $allCompletedImageIds !== []) {
+                unset($_SESSION["flash_message"], $_SESSION["flash_type"]);
+            } else {
+                setFlashMessage($uploadProgressMessage, "error");
+            }
+            unset($_SESSION["upload_batch_sessions"][$uploadSessionId]);
+
+            $_SESSION["upload_progress"][$uploadProgressToken] = [
+                "status" => "complete",
+                "current" => $overallImageTotal,
+                "total" => $overallImageTotal,
+                "base_current" => 0,
+                "remaining_count" => 0,
+                "overall_total" => $overallSelectedCount,
+                "batch_index" => $uploadBatchIndex,
+                "total_batches" => $uploadTotalBatches,
+                "batch_start_index" => $uploadBatchStartIndex,
+                "success_count" => $successCount,
+                "failed_count" => $failedCount,
+                "message" => $uploadProgressMessage,
+                "updated_at" => time()
+            ];
+        }
+
+        if (!session_write_close()) {
+            throw new RuntimeException("Could not save the upload results.");
+        }
+
+        header("Content-Type: application/json; charset=utf-8");
+        echo json_encode([
+            "status" => $isFinalBatch ? "complete" : "batch_complete",
+            "batch_index" => $uploadBatchIndex,
+            "total_batches" => $uploadTotalBatches,
+            "batch_success_count" => $batchSuccessCount,
+            "batch_failed_count" => $batchFailedCount,
+            "batch_total" => $batchResultTotal,
+            "success_count" => $successCount,
+            "failed_count" => $failedCount,
+            "total" => $overallImageTotal,
+            "message" => $uploadProgressMessage,
+            "redirect" => $isFinalBatch ? "upload.php" : null
+        ]);
+        exit();
+    }
+
+    $successCount = $batchSuccessCount;
+    $failedCount = $batchFailedCount;
+    if ($uploadImageTotal > 0) {
+        $uploadProgressMessage = $failedCount > 0
+            ? sprintf(
                 "%d of %d images analysed successfully. %d %s failed.",
                 $successCount,
                 $uploadImageTotal,
-                $failedImageCount,
-                $failedImageCount === 1 ? "image" : "images"
-            );
-        } else {
-            $uploadProgressMessage = $uploadImageTotal === 1
-                ? "Image analysed successfully."
-                : sprintf("%d images analysed successfully.", $successCount);
-        }
-    }
-
-    if ($uploadPreparationFailures > 0) {
-        $zipFailureMessage = $uploadPreparationFailures === 1
-            ? "1 ZIP file could not be processed."
-            : sprintf("%d ZIP files could not be processed.", $uploadPreparationFailures);
-        $uploadProgressMessage = $uploadProgressMessage === "" && $message !== ""
-            ? $message
-            : trim($uploadProgressMessage . " " . $zipFailureMessage);
-    }
-
-    if ($uploadProgressMessage === "") {
-        $uploadProgressMessage = $message !== ""
-            ? $message
-            : "No supported images were found. Please upload JPG, PNG or WEBP files.";
+                $failedCount,
+                $failedCount === 1 ? "image" : "images"
+            )
+            : sprintf("%d images analysed successfully.", $successCount);
+    } elseif ($message !== "") {
+        $uploadProgressMessage = $message;
+    } else {
+        $uploadProgressMessage = "No supported images were found. Please upload JPG, PNG or WEBP files.";
     }
 
     $message = $uploadProgressMessage;
@@ -1030,45 +1585,8 @@ if ($redirectAfterPost || $isAjaxUploadRequest) {
     if ($completedImageIds !== []) {
         $_SESSION["upload_completion_image_ids"] = $completedImageIds;
         $_SESSION["latest_analysis_batch_ids"] = $completedImageIds;
-
-        if ($message_type === "error") {
-            setFlashMessage($message, $message_type);
-        } else {
-            unset($_SESSION["flash_message"], $_SESSION["flash_type"]);
-        }
-    } else {
-        setFlashMessage($message, $message_type);
     }
-
-    if ($isAjaxUploadRequest) {
-        $progressStatus = $uploadImageTotal === 0 && $failedCount === 0
-            ? "error"
-            : "complete";
-        $_SESSION["upload_progress"][$uploadProgressToken] = [
-            "status" => $progressStatus,
-            "current" => $uploadImageTotal,
-            "total" => $uploadImageTotal,
-            "success_count" => $successCount,
-            "failed_count" => $failedCount,
-            "message" => $uploadProgressMessage,
-            "updated_at" => time()
-        ];
-        if (!session_write_close()) {
-            throw new RuntimeException("Could not save the upload results.");
-        }
-
-        header("Content-Type: application/json; charset=utf-8");
-        echo json_encode([
-            "status" => $progressStatus,
-            "current" => $uploadImageTotal,
-            "total" => $uploadImageTotal,
-            "success_count" => $successCount,
-            "failed_count" => $failedCount,
-            "message" => $uploadProgressMessage,
-            "redirect" => "upload.php"
-        ]);
-        exit();
-    }
+    setFlashMessage($message, $message_type);
 
     if ($redirectAfterPost) {
         redirectToUpload();
@@ -1567,6 +2085,16 @@ function finishUpload(data) {
     }, 850);
 }
 
+function stopUploadWithError(message) {
+    analysisSubmitted = false;
+    stopUploadProgressPolling();
+    analyseButton.disabled = false;
+    analyseButton.classList.remove("is-processing");
+    analyseButtonLabel.textContent = "Analyse Images";
+    uploadForm.setAttribute("aria-busy", "false");
+    showUploadProgress(message);
+}
+
 function applyUploadProgress(state) {
     if (state.status === "complete" || state.status === "error") {
         finishUpload({
@@ -1576,12 +2104,30 @@ function applyUploadProgress(state) {
         return;
     }
 
+    if (state.status === "configuration_error") {
+        analysisSubmitted = false;
+        stopUploadProgressPolling();
+        analyseButton.disabled = false;
+        analyseButton.classList.remove("is-processing");
+        analyseButtonLabel.textContent = "Analyse Images";
+        uploadForm.setAttribute("aria-busy", "false");
+        showUploadProgress(state.message || "PHP did not receive every selected file.");
+        return;
+    }
+
     if (state.status === "processing" && Number(state.total) > 0) {
-        const total = Number(state.total);
-        const current = Math.min(Number(state.current), total);
-        const message = total === 1
-            ? "Analysing image…"
-            : `Analysing ${current} of ${total} images…`;
+        const baseCurrent = Number(state.base_current) || 0;
+        const current = baseCurrent + Math.min(
+            Number(state.current) || 0,
+            Number(state.total)
+        );
+        const total = baseCurrent +
+            Number(state.total) +
+            (Number(state.remaining_count) || 0);
+        const message = state.message ||
+            (total === 1
+                ? "Analysing image…"
+                : `Analysing ${Math.min(current, total)} of ${total} images…`);
         showUploadProgress(message);
         analyseButtonLabel.textContent = "Analysing…";
         progressPollFailures = 0;
@@ -1589,9 +2135,143 @@ function applyUploadProgress(state) {
     }
 
     if (state.status === "preparing") {
-        showUploadProgress("Preparing images…");
+        const message = Number(state.total) > 0
+            ? `Preparing images ${Math.min(
+                (Number(state.base_current) || 0) + (Number(state.current) || 0),
+                (Number(state.base_current) || 0) +
+                    Number(state.total) +
+                    (Number(state.remaining_count) || 0)
+            )} of ${
+                (Number(state.base_current) || 0) +
+                Number(state.total) +
+                (Number(state.remaining_count) || 0)
+            }…`
+            : (state.message || "Preparing images…");
+        showUploadProgress(message);
         analyseButtonLabel.textContent = "Preparing…";
     }
+}
+
+function createUploadSessionId() {
+    const bytes = new Uint8Array(16);
+    window.crypto.getRandomValues(bytes);
+    return Array.from(bytes, function (byte) {
+        return byte.toString(16).padStart(2, "0");
+    }).join("");
+}
+
+function splitUploadFiles(files) {
+    const UPLOAD_BATCH_SIZE = 15;
+    const MAX_BATCH_BYTES = 30 * 1024 * 1024;
+    const batches = [];
+    let batch = [];
+    let batchBytes = 0;
+
+    files.forEach(function (file) {
+        if (
+            batch.length > 0 &&
+            (
+                batch.length >= UPLOAD_BATCH_SIZE ||
+                batchBytes + file.size > MAX_BATCH_BYTES
+            )
+        ) {
+            batches.push(batch);
+            batch = [];
+            batchBytes = 0;
+        }
+
+        batch.push(file);
+        batchBytes += file.size;
+    });
+
+    if (batch.length > 0) {
+        batches.push(batch);
+    }
+
+    return batches;
+}
+
+function sendUploadBatch(
+    files,
+    batchIndex,
+    totalBatches,
+    batchStartIndex,
+    overallTotal,
+    uploadSessionId
+) {
+    return new Promise(function (resolve, reject) {
+        const formData = new FormData(uploadForm);
+        formData.delete("plantation_image[]");
+        files.forEach(function (file) {
+            formData.append("plantation_image[]", file, file.name);
+        });
+        formData.append("ajax_upload", "1");
+        formData.append("upload_session_id", uploadSessionId);
+        formData.append("batch_index", String(batchIndex));
+        formData.append("total_batches", String(totalBatches));
+        formData.append("batch_start_index", String(batchStartIndex));
+        formData.append("overall_total", String(overallTotal));
+        formData.append("batch_file_count", String(files.length));
+
+        const request = new XMLHttpRequest();
+        request.open("POST", uploadForm.action || window.location.href, true);
+        request.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+        request.setRequestHeader(
+            "X-Expected-Upload-Count",
+            String(files.length)
+        );
+
+        request.upload.addEventListener("progress", function (progressEvent) {
+            if (
+                progressEvent.lengthComputable &&
+                progressEvent.loaded >= progressEvent.total
+            ) {
+                showUploadProgress("Preparing images...");
+            } else {
+                showUploadProgress("Uploading images...");
+            }
+        });
+
+        request.addEventListener("load", function () {
+            let result;
+            try {
+                result = JSON.parse(request.responseText);
+            } catch (error) {
+                reject(new Error(
+                    "The server could not confirm batch " + batchIndex +
+                    ". Refresh the page and check Analysis Results before retrying."
+                ));
+                return;
+            }
+
+            if (request.status < 200 || request.status >= 300) {
+                reject(new Error(
+                    result.message || "Upload batch " + batchIndex + " failed."
+                ));
+                return;
+            }
+
+            const expectedStatus = batchIndex === totalBatches
+                ? "complete"
+                : "batch_complete";
+            if (result.status !== expectedStatus) {
+                reject(new Error(
+                    result.message || "The server did not complete upload batch " + batchIndex + "."
+                ));
+                return;
+            }
+            resolve(result);
+        });
+
+        request.addEventListener("error", function () {
+            reject(new Error(
+                "The connection was interrupted during batch " + batchIndex +
+                ". Previously completed batches were retained. Refresh and check Analysis Results before retrying."
+            ));
+        });
+
+        request.send(formData);
+    });
 }
 
 async function pollUploadProgress() {
@@ -1631,7 +2311,7 @@ async function pollUploadProgress() {
     }
 }
 
-uploadForm.addEventListener("submit", function (event) {
+uploadForm.addEventListener("submit", async function (event) {
     if (analysisSubmitted) {
         event.preventDefault();
         return;
@@ -1644,66 +2324,51 @@ uploadForm.addEventListener("submit", function (event) {
     }
 
     event.preventDefault();
+    const selectedFiles = Array.from(fileInput.files);
+    const totalSelected = selectedFiles.length;
+    const uploadBatches = splitUploadFiles(selectedFiles);
+    const totalBatches = uploadBatches.length;
+    const uploadSessionId = createUploadSessionId();
+
     analysisSubmitted = true;
     analyseButton.disabled = true;
     analyseButton.classList.add("is-processing");
     analyseButtonLabel.textContent = "Preparing…";
-    showUploadProgress("Uploading files…");
+    showUploadProgress("Uploading images...");
     uploadForm.setAttribute("aria-busy", "true");
 
-    const formData = new FormData(uploadForm);
-    formData.append("ajax_upload", "1");
-
-    const request = new XMLHttpRequest();
-    request.open("POST", uploadForm.action || window.location.href, true);
-    request.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-
-    request.upload.addEventListener("progress", function (progressEvent) {
-        if (
-            progressEvent.lengthComputable &&
-            progressEvent.loaded >= progressEvent.total
-        ) {
-            showUploadProgress("Preparing images…");
-        } else {
-            showUploadProgress("Uploading files…");
-        }
-    });
-
-    request.addEventListener("load", function () {
-        let result;
-        try {
-            result = JSON.parse(request.responseText);
-        } catch (error) {
-            showUploadProgress(
-                "The server could not confirm completion. Refresh the page to check before trying again."
-            );
-            return;
-        }
-
-        if (request.status >= 200 && request.status < 300 && result.redirect) {
-            finishUpload(result);
-            return;
-        }
-
-        analysisSubmitted = false;
-        stopUploadProgressPolling();
-        analyseButton.disabled = false;
-        analyseButton.classList.remove("is-processing");
-        analyseButtonLabel.textContent = "Analyse Images";
-        uploadForm.setAttribute("aria-busy", "false");
-        showUploadProgress(
-            result.message || "The upload could not be started. Refresh and try again."
-        );
-    });
-
-    request.addEventListener("error", function () {
-        showUploadProgress(
-            "The connection was interrupted. Checking whether processing is still active…"
-        );
-    });
-
-    request.send(formData);
     pollUploadProgress();
+
+    let finalResult = null;
+    let batchStartIndex = 0;
+    try {
+        for (let batchOffset = 0; batchOffset < totalBatches; batchOffset++) {
+            const batchIndex = batchOffset + 1;
+            const batchFiles = uploadBatches[batchOffset];
+            finalResult = await sendUploadBatch(
+                batchFiles,
+                batchIndex,
+                totalBatches,
+                batchStartIndex,
+                totalSelected,
+                uploadSessionId
+            );
+            batchStartIndex += batchFiles.length;
+        }
+
+        finishUpload(finalResult || {
+            message: "Analysis complete.",
+            redirect: "upload.php"
+        });
+    } catch (error) {
+        const partialSummary = finalResult
+            ? `${finalResult.success_count} images were successfully analysed before this batch; ${finalResult.failed_count} failed in completed batches. `
+            : "";
+        stopUploadWithError(
+            partialSummary + error.message +
+            " Successful batches were not re-uploaded."
+        );
+    }
 });
 
 function confirmDeleteImage(fileName) {

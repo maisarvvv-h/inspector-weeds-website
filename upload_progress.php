@@ -29,6 +29,12 @@ echo json_encode([
     "status" => (string) ($progress["status"] ?? "waiting"),
     "current" => (int) ($progress["current"] ?? 0),
     "total" => (int) ($progress["total"] ?? 0),
+    "base_current" => (int) ($progress["base_current"] ?? 0),
+    "remaining_count" => (int) ($progress["remaining_count"] ?? 0),
+    "overall_total" => (int) ($progress["overall_total"] ?? 0),
+    "batch_index" => (int) ($progress["batch_index"] ?? 0),
+    "total_batches" => (int) ($progress["total_batches"] ?? 0),
+    "batch_start_index" => (int) ($progress["batch_start_index"] ?? 0),
     "success_count" => (int) ($progress["success_count"] ?? 0),
     "failed_count" => (int) ($progress["failed_count"] ?? 0),
     "message" => (string) ($progress["message"] ?? "")
