@@ -1,0 +1,296 @@
+/* Inspector Weeds - Upload page only
+   Loaded after style.css so this file safely overrides old upload rules. */
+
+.upload-main {
+    --upload-gap: 20px;
+    --upload-card-padding: 22px;
+    padding: 24px 28px 28px;
+    overflow-x: hidden;
+}
+
+.upload-main .app-header {
+    min-height: 108px !important;
+    padding: 18px 26px !important;
+    margin-bottom: 18px;
+}
+
+.upload-main .app-header h1 {
+    margin: 3px 0 5px;
+    font-size: clamp(27px, 2vw, 32px) !important;
+}
+
+.upload-main .app-header p {
+    font-size: 12px !important;
+}
+
+.upload-main .header-user {
+    min-width: 210px;
+    padding: 9px 12px;
+}
+
+.upload-main .header-avatar {
+    width: 44px;
+    height: 44px;
+}
+
+.upload-page-grid {
+    display: grid !important;
+    grid-template-columns: minmax(520px, 1.65fr) minmax(310px, 1fr) !important;
+    align-items: start !important;
+    gap: var(--upload-gap) !important;
+    margin: 0 !important;
+}
+
+.upload-page-grid > .content-card {
+    min-width: 0;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: var(--upload-card-padding);
+}
+
+.upload-form-card .upload-card-heading {
+    margin-bottom: 14px !important;
+}
+
+.upload-form-card .upload-card-heading > .heading-icon {
+    width: 50px !important;
+    min-width: 50px !important;
+    max-width: 50px !important;
+    height: 50px !important;
+    flex-basis: 50px !important;
+}
+
+.upload-form-card .upload-card-heading-text h2,
+.recent-upload-heading h2 {
+    font-size: 20px !important;
+}
+
+.image-drop-area,
+.upload-placeholder,
+.selected-image-preview,
+.selected-image-preview:not([hidden]) {
+    height: 280px !important;
+    min-height: 280px !important;
+}
+
+.image-drop-area {
+    padding: 0 !important;
+}
+
+.upload-placeholder,
+.selected-image-preview {
+    padding: 18px !important;
+}
+
+.upload-placeholder[hidden],
+.selected-image-preview[hidden] {
+    display: none !important;
+}
+
+.upload-icon-circle {
+    width: 58px !important;
+    height: 58px !important;
+    margin-bottom: 8px !important;
+    font-size: 25px !important;
+}
+
+.upload-placeholder h3 {
+    margin: 6px 0 4px !important;
+    font-size: 18px !important;
+}
+
+.selected-image-preview img {
+    max-height: 165px !important;
+}
+
+.information-note {
+    margin-top: 12px;
+    padding: 11px 13px;
+}
+
+.main-action-button {
+    margin-top: 12px;
+    padding: 13px 18px;
+}
+
+.recent-upload-panel {
+    max-height: 574px;
+    overflow: hidden;
+}
+
+.recent-upload-heading {
+    align-items: flex-start;
+    margin-bottom: 14px;
+}
+
+.recent-upload-heading .page-label {
+    margin-bottom: 3px;
+}
+
+.recent-upload-subtitle {
+    margin: 5px 0 0;
+    color: var(--iw-muted);
+    font-size: 11px;
+}
+
+.recent-upload-heading .simple-link {
+    white-space: nowrap;
+    font-size: 11px;
+}
+
+.recent-upload-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+}
+
+.recent-upload-card {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr);
+    min-height: 94px;
+    border-radius: 14px;
+}
+
+.recent-upload-card img {
+    width: 92px;
+    height: 100%;
+    min-height: 94px;
+    object-fit: cover;
+}
+
+.recent-upload-content {
+    min-width: 0;
+    padding: 10px 11px;
+}
+
+.recent-upload-title {
+    gap: 6px;
+}
+
+.recent-upload-title strong {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 11px;
+}
+
+.recent-upload-content p {
+    margin: 7px 0;
+    font-size: 9px;
+}
+
+.zone-label,
+.upload-status {
+    padding: 4px 7px;
+    font-size: 9px;
+}
+
+.no-upload-state {
+    grid-column: 1;
+    min-height: 310px;
+}
+
+@media (max-width: 1250px) {
+    .upload-page-grid {
+        grid-template-columns: minmax(440px, 1.5fr) minmax(280px, 1fr) !important;
+    }
+
+    .upload-main {
+        padding-inline: 20px;
+    }
+}
+
+@media (max-width: 1000px) {
+    .upload-page-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .recent-upload-panel {
+        max-height: none;
+    }
+
+    .recent-upload-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (max-width: 760px) {
+    body.dashboard-body > .app-sidebar {
+        position: static !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        height: auto !important;
+    }
+
+    body.dashboard-body > .app-main {
+        width: 100% !important;
+        margin-left: 0 !important;
+    }
+
+    .upload-main {
+        padding: 14px;
+    }
+
+    .upload-main .header-user {
+        display: none;
+    }
+
+    .image-drop-area,
+    .upload-placeholder,
+    .selected-image-preview,
+    .selected-image-preview:not([hidden]) {
+        height: 250px !important;
+        min-height: 250px !important;
+    }
+
+    .recent-upload-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* ==========================================
+   DELETE IMAGE BUTTON
+========================================== */
+
+.delete-image-form {
+    margin-top: 10px;
+}
+
+.delete-image-button {
+    width: 100%;
+    padding: 9px 14px;
+
+    border: 1px solid #F4C542;
+    border-radius: 10px;
+
+    background: #FFF8E1;
+    color: #B8860B;
+
+    font-family: "Poppins", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.delete-image-button:hover {
+    background: #F4C542;
+    color: #123B2C;
+    border-color: #F4C542;
+
+    transform: translateY(-1px);
+}
+
+.delete-image-button:active {
+    transform: translateY(0);
+}

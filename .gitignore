@@ -1,0 +1,50 @@
+# Python environment
+/venv/
+.venv/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+
+# Runtime-generated files
+/uploads/
+/processed/
+/temp_zip/
+/logs/
+*.log
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+config.local.php
+
+# Local PHP configuration
+/php.ini
+/php.ini-development
+/php.ini-production
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary / backup files
+*.tmp
+*.bak
+*~
+
+# VS Code
+.vscode/
+
+# Old backup copies
+*(o).php
+*(o)/
+
+/oldpages/
+oldpages/
+
+
+

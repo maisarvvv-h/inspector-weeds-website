@@ -1,0 +1,626 @@
+/* =========================================================
+   INSPECTOR WEEDS — TRACEABILITY REPORT
+   File: css/traceability.css
+========================================================= */
+
+body.traceability-page {
+    min-height: 100vh;
+    color: var(--iw-text);
+    background:
+        radial-gradient(circle at top right, rgba(242, 201, 76, 0.08), transparent 25%),
+        linear-gradient(180deg, #fbfcfb 0%, #f2f7f3 100%);
+}
+
+body.traceability-page .traceability-main {
+    min-width: 0;
+}
+
+body.traceability-page .traceability-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 24px;
+    padding: 26px 30px;
+    border: 1px solid #dce8df;
+    border-radius: 22px;
+    background: #ffffff;
+    box-shadow: 0 14px 32px rgba(14, 72, 49, 0.07);
+}
+
+body.traceability-page .traceability-eyebrow {
+    margin: 0 0 6px;
+    color: #d8aa20;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+body.traceability-page .traceability-header h1 {
+    margin: 0;
+    color: var(--iw-deep-green);
+    font-size: 28px;
+    line-height: 1.15;
+}
+
+body.traceability-page .traceability-header p:not(.traceability-eyebrow) {
+    max-width: 760px;
+    margin: 8px 0 0;
+    color: var(--iw-muted);
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+body.traceability-page .traceability-print-button {
+    min-height: 44px;
+    padding: 10px 18px;
+    border: 1px solid #e4c75c;
+    border-radius: 12px;
+    color: var(--iw-dark-green);
+    background: #fff8d8;
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+body.traceability-page .traceability-workspace {
+    display: grid;
+    grid-template-columns: 245px minmax(0, 1fr);
+    gap: 22px;
+    align-items: start;
+}
+
+body.traceability-page .traceability-filter-panel {
+    position: sticky;
+    top: 18px;
+    padding: 20px;
+    border: 1px solid var(--iw-border);
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 12px 28px rgba(14, 72, 49, 0.06);
+}
+
+body.traceability-page .traceability-filter-heading {
+    margin-bottom: 18px;
+}
+
+body.traceability-page .traceability-filter-heading span {
+    display: block;
+    color: var(--iw-deep-green);
+    font-size: 11px;
+    font-weight: 800;
+}
+
+body.traceability-page .traceability-filter-heading small {
+    display: block;
+    margin-top: 5px;
+    color: var(--iw-muted);
+    font-size: 8px;
+}
+
+body.traceability-page .traceability-filter-form {
+    display: grid;
+    gap: 18px;
+}
+
+body.traceability-page .traceability-filter-form label {
+    display: grid;
+    gap: 7px;
+}
+
+body.traceability-page .traceability-filter-form label > span {
+    color: var(--iw-text);
+    font-size: 9px;
+    font-weight: 700;
+}
+
+body.traceability-page .traceability-filter-form select {
+    width: 100%;
+    min-height: 43px;
+    padding: 9px 34px 9px 12px;
+    border: 1px solid var(--iw-border);
+    border-radius: 10px;
+    color: var(--iw-text);
+    background: #ffffff;
+    font-family: inherit;
+    font-size: 10px;
+    outline: none;
+}
+
+body.traceability-page .traceability-filter-form select:focus {
+    border-color: var(--iw-main-green);
+    box-shadow: 0 0 0 3px rgba(22, 130, 79, 0.10);
+}
+
+body.traceability-page .traceability-filter-actions {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+}
+
+body.traceability-page .traceability-filter-actions button,
+body.traceability-page .traceability-filter-actions a {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 12px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 9px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+body.traceability-page .traceability-filter-actions button {
+    border: 0;
+    color: #ffffff;
+    background: var(--iw-main-green);
+    cursor: pointer;
+}
+
+body.traceability-page .traceability-filter-actions a {
+    border: 1px solid var(--iw-border);
+    color: var(--iw-dark-green);
+    background: #ffffff;
+}
+
+body.traceability-page .traceability-report-content {
+    display: grid;
+    gap: 22px;
+    min-width: 0;
+}
+
+body.traceability-page .traceability-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+body.traceability-page .traceability-kpi-grid article {
+    min-height: 120px;
+    padding: 22px;
+    border: 1px solid #dce7df;
+    border-radius: 15px;
+    background: linear-gradient(145deg, #ffffff, #f8fbf9);
+}
+
+body.traceability-page .traceability-kpi-grid span {
+    display: block;
+    color: #55685d;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.45;
+}
+
+body.traceability-page .traceability-kpi-grid strong {
+    display: block;
+    margin-top: 18px;
+    color: var(--iw-deep-green);
+    font-size: 28px;
+    line-height: 1;
+}
+
+body.traceability-page .traceability-card,
+body.traceability-page .traceability-action-card {
+    overflow: hidden;
+    border: 1px solid var(--iw-border);
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 10px 24px rgba(14, 72, 49, 0.045);
+}
+
+body.traceability-page .traceability-card-title {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--iw-border);
+    color: var(--iw-deep-green);
+    background: #f7faf8;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-align: center;
+}
+
+body.traceability-page .traceability-subheading {
+    padding: 17px 18px 0;
+    color: var(--iw-deep-green);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+}
+
+body.traceability-page .traceability-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+body.traceability-page .traceability-summary-table,
+body.traceability-page .traceability-evidence-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+body.traceability-page .traceability-summary-table th,
+body.traceability-page .traceability-evidence-table th {
+    padding: 13px 15px;
+    border-bottom: 1px solid #dde7e0;
+    color: #53665a;
+    background: #fbfcfb;
+    font-size: 9px;
+    font-weight: 800;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+body.traceability-page .traceability-summary-table td,
+body.traceability-page .traceability-evidence-table td {
+    padding: 14px 15px;
+    border-bottom: 1px solid #edf1ee;
+    color: var(--iw-text);
+    font-size: 10px;
+}
+
+body.traceability-page .traceability-summary-table tbody tr:last-child td,
+body.traceability-page .traceability-evidence-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+body.traceability-page .traceability-zone-link {
+    color: var(--iw-main-green);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+body.traceability-page .traceability-zone-link:hover {
+    text-decoration: underline;
+}
+
+body.traceability-page .traceability-severity {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 58px;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 8px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+body.traceability-page .traceability-severity.high {
+    color: #b42c3a;
+    background: #ffdce0;
+}
+
+body.traceability-page .traceability-severity.low {
+    color: #1e7b42;
+    background: #dff5e6;
+}
+
+body.traceability-page .traceability-empty {
+    padding: 28px !important;
+    color: var(--iw-muted) !important;
+    text-align: center !important;
+}
+
+body.traceability-page .traceability-zone-report {
+    display: grid;
+    gap: 20px;
+}
+
+body.traceability-page .traceability-zone-banner {
+    padding: 17px 20px;
+    border: 1px solid var(--iw-border);
+    border-radius: 14px;
+    color: var(--iw-deep-green);
+    background: #ffffff;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+body.traceability-page .traceability-zone-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+body.traceability-page .traceability-detail-list {
+    margin: 0;
+    padding: 10px 18px 18px;
+}
+
+body.traceability-page .traceability-detail-list > div {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    padding: 13px 0;
+    border-bottom: 1px solid #edf1ee;
+}
+
+body.traceability-page .traceability-detail-list > div:last-child {
+    border-bottom: 0;
+}
+
+body.traceability-page .traceability-detail-list dt {
+    color: var(--iw-muted);
+    font-size: 9px;
+}
+
+body.traceability-page .traceability-detail-list dd {
+    margin: 0;
+    color: var(--iw-deep-green);
+    font-size: 10px;
+    font-weight: 700;
+    text-align: right;
+}
+
+body.traceability-page .traceability-action-body {
+    display: grid;
+    gap: 22px;
+    padding: 22px;
+}
+
+body.traceability-page .traceability-action-body > div:not(.traceability-action-metrics) {
+    display: grid;
+    gap: 6px;
+}
+
+body.traceability-page .traceability-action-body span {
+    color: var(--iw-muted);
+    font-size: 9px;
+}
+
+body.traceability-page .traceability-action-body strong {
+    color: var(--iw-deep-green);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+body.traceability-page .traceability-action-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+body.traceability-page .traceability-action-metrics > div {
+    padding: 15px;
+    border: 1px solid var(--iw-border);
+    border-radius: 12px;
+    background: #f8fbf9;
+}
+
+body.traceability-page .traceability-action-metrics span {
+    display: block;
+}
+
+body.traceability-page .traceability-action-metrics strong {
+    display: block;
+    margin-top: 7px;
+}
+
+body.traceability-page .traceability-rspo-note {
+    padding: 17px 19px;
+    border: 1px solid #eadb9e;
+    border-left: 5px solid #e5b92e;
+    border-radius: 13px;
+    background: #fffdf3;
+}
+
+body.traceability-page .traceability-rspo-note strong {
+    display: block;
+    color: var(--iw-deep-green);
+    font-size: 10px;
+}
+
+body.traceability-page .traceability-rspo-note p {
+    margin: 6px 0 0;
+    color: #66776e;
+    font-size: 8px;
+    line-height: 1.6;
+}
+
+body.traceability-page .traceability-drill-hint,
+body.traceability-page .traceability-empty-card {
+    display: grid;
+    gap: 5px;
+    padding: 20px;
+    border: 1px dashed #cddbd2;
+    border-radius: 14px;
+    color: var(--iw-muted);
+    background: #fbfdfb;
+    font-size: 9px;
+}
+
+body.traceability-page .traceability-drill-hint strong {
+    color: var(--iw-deep-green);
+    font-size: 10px;
+}
+
+@media (max-width: 1100px) {
+    body.traceability-page .traceability-workspace {
+        grid-template-columns: 1fr;
+    }
+
+    body.traceability-page .traceability-filter-panel {
+        position: static;
+    }
+
+    body.traceability-page .traceability-filter-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 760px) {
+    body.traceability-page .traceability-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    body.traceability-page .traceability-kpi-grid,
+    body.traceability-page .traceability-zone-grid,
+    body.traceability-page .traceability-action-metrics,
+    body.traceability-page .traceability-filter-form {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media print {
+    body.traceability-page {
+        background: #ffffff !important;
+    }
+
+    body.traceability-page .app-sidebar,
+    body.traceability-page .traceability-filter-panel,
+    body.traceability-page .traceability-print-button,
+    body.traceability-page .app-footer {
+        display: none !important;
+    }
+
+    body.traceability-page .app-main {
+        width: 100% !important;
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+
+    body.traceability-page .traceability-workspace {
+        display: block !important;
+    }
+
+    body.traceability-page .traceability-card,
+    body.traceability-page .traceability-action-card,
+    body.traceability-page .traceability-zone-banner {
+        break-inside: avoid;
+        box-shadow: none !important;
+    }
+}
+
+/* =========================================================
+   VISUAL THEME REFINEMENT
+   Align Traceability Report with Inspector Weeds branding
+========================================================= */
+
+/* Main report header — green like Treatment Planning */
+body.traceability-page .traceability-header {
+    position: relative;
+    overflow: hidden;
+    border: 0;
+    color: #ffffff;
+    background:
+        linear-gradient(
+            135deg,
+            #0f653f 0%,
+            #13804d 58%,
+            #1e9a58 100%
+        );
+    box-shadow:
+        0 16px 34px
+        rgba(14, 72, 49, 0.13);
+}
+
+body.traceability-page .traceability-header::after {
+    content: "";
+    position: absolute;
+    top: -120px;
+    right: -65px;
+    width: 225px;
+    height: 225px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+body.traceability-page .traceability-header > * {
+    position: relative;
+    z-index: 2;
+}
+
+body.traceability-page .traceability-eyebrow {
+    color: #f2c94c;
+}
+
+body.traceability-page .traceability-header h1 {
+    color: #ffffff;
+}
+
+body.traceability-page
+.traceability-header p:not(.traceability-eyebrow) {
+    color: rgba(255, 255, 255, 0.86);
+}
+
+/* KPI cards — warm yellow treatment-planning style */
+body.traceability-page .traceability-kpi-grid article {
+    position: relative;
+    overflow: hidden;
+    border:
+        1px solid
+        rgba(224, 184, 63, 0.60);
+    border-radius: 16px;
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff 0%,
+            #fffdf6 58%,
+            #faf1d2 100%
+        );
+    box-shadow:
+        0 12px 28px
+        rgba(91, 73, 19, 0.07);
+}
+
+body.traceability-page .traceability-kpi-grid article::after {
+    content: "";
+    position: absolute;
+    right: -35px;
+    bottom: -42px;
+    width: 105px;
+    height: 105px;
+    border-radius: 50%;
+    background: rgba(242, 201, 76, 0.11);
+}
+
+body.traceability-page .traceability-kpi-grid article > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* Section title boxes — green for stronger visual hierarchy */
+body.traceability-page .traceability-card-title {
+    border-bottom: 0;
+    color: #ffffff;
+    background:
+        linear-gradient(
+            135deg,
+            #0f653f 0%,
+            #17864f 100%
+        );
+}
+
+body.traceability-page .traceability-zone-banner {
+    border: 0;
+    color: #ffffff;
+    background:
+        linear-gradient(
+            135deg,
+            #0f653f 0%,
+            #17864f 100%
+        );
+    box-shadow:
+        0 10px 24px
+        rgba(14, 72, 49, 0.10);
+}
+
+/* Location / Treatment Record title strips */
+body.traceability-page .traceability-subheading {
+    padding: 14px 18px;
+    border-bottom: 1px solid #eadb9e;
+    color: var(--iw-deep-green);
+    background:
+        linear-gradient(
+            90deg,
+            #fff8dc,
+            #fffdf4
+        );
+}

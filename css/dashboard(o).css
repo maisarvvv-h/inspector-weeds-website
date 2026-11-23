@@ -1,0 +1,1468 @@
+/* =========================================================
+   INSPECTOR WEEDS — HOME DASHBOARD
+   File: css/dashboard.css
+
+   Purpose:
+   - Exact executive overview layout
+   - No Recent Activity section
+   - Five KPI cards in one row
+   - Plantation heatmap on the LEFT
+   - Severity Distribution, Avg Weed Coverage by Zone,
+     and Management Focus stacked on the RIGHT
+========================================================= */
+
+
+/* =========================================================
+   PAGE SCOPE
+========================================================= */
+
+body.home-dashboard-page {
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(242, 201, 76, 0.08),
+            transparent 24%
+        ),
+        linear-gradient(
+            180deg,
+            #fbfcfb 0%,
+            #f2f7f3 100%
+        );
+}
+
+body.home-dashboard-page .app-main {
+    min-width: 0;
+}
+
+
+/* =========================================================
+   HEADER — COMPACT EXECUTIVE OVERVIEW
+========================================================= */
+
+body.home-dashboard-page
+.dashboard-page-header {
+    min-height: 112px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+
+    gap: 22px !important;
+
+    margin-bottom: 12px !important;
+    padding: 18px 26px !important;
+
+    border-radius: 22px !important;
+
+    color: #ffffff !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0f653f 0%,
+            #13804d 58%,
+            #1e9a58 100%
+        ) !important;
+
+    box-shadow:
+        0 14px 30px
+        rgba(14, 72, 49, 0.11) !important;
+}
+
+body.home-dashboard-page
+.dashboard-page-header h1 {
+    margin: 3px 0 5px !important;
+
+    color: #ffffff !important;
+
+    font-size: 27px !important;
+    line-height: 1.08 !important;
+}
+
+body.home-dashboard-page
+.dashboard-page-header .page-label {
+    color: #f2c94c !important;
+
+    font-size: 9px !important;
+}
+
+body.home-dashboard-page
+.dashboard-page-header p:not(.page-label) {
+    max-width: 760px !important;
+    margin: 0 !important;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.84
+        ) !important;
+
+    font-size: 9px !important;
+    line-height: 1.4 !important;
+}
+
+body.home-dashboard-page
+.header-user {
+    min-width: 205px !important;
+
+    padding: 9px 12px !important;
+}
+
+body.home-dashboard-page
+.header-avatar {
+    width: 44px !important;
+    height: 44px !important;
+
+    font-size: 17px !important;
+}
+
+
+/* =========================================================
+   KPI ROW
+========================================================= */
+
+body.home-dashboard-page
+.home-executive-kpis {
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(
+            5,
+            minmax(0, 1fr)
+        ) !important;
+
+    gap: 9px !important;
+
+    margin: 0 0 12px !important;
+}
+
+body.home-dashboard-page
+.home-kpi-card {
+    position: relative !important;
+    overflow: hidden !important;
+
+    display: flex !important;
+    align-items: center !important;
+
+    gap: 9px !important;
+
+    min-width: 0 !important;
+    min-height: 78px !important;
+
+    padding: 10px 11px !important;
+
+    border:
+        1px solid
+        rgba(
+            224,
+            184,
+            63,
+            0.56
+        ) !important;
+
+    border-radius: 14px !important;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff 0%,
+            #fffdf6 60%,
+            #faf1d2 100%
+        ) !important;
+
+    box-shadow:
+        0 9px 20px
+        rgba(
+            91,
+            73,
+            19,
+            0.055
+        ) !important;
+}
+
+body.home-dashboard-page
+.home-kpi-card::after {
+    content: "" !important;
+
+    position: absolute !important;
+
+    right: -32px !important;
+    bottom: -42px !important;
+
+    width: 86px !important;
+    height: 86px !important;
+
+    border-radius: 50% !important;
+
+    background:
+        rgba(
+            242,
+            201,
+            76,
+            0.10
+        ) !important;
+}
+
+body.home-dashboard-page
+.home-kpi-card > * {
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+body.home-dashboard-page
+.home-kpi-icon {
+    display: grid !important;
+    place-items: center !important;
+
+    width: 36px !important;
+    min-width: 36px !important;
+    height: 36px !important;
+
+    border:
+        1px solid
+        #eadb9e !important;
+
+    border-radius: 10px !important;
+
+    background:
+        linear-gradient(
+            145deg,
+            #fff7d7,
+            #f2e2a4
+        ) !important;
+
+    font-size: 16px !important;
+}
+
+body.home-dashboard-page
+.home-kpi-card span {
+    display: block !important;
+
+    color: #756945 !important;
+
+    font-size: 6.2px !important;
+    font-weight: 800 !important;
+
+    letter-spacing: 0.32px !important;
+
+    text-transform: uppercase !important;
+}
+
+body.home-dashboard-page
+.home-kpi-card strong {
+    display: block !important;
+
+    margin-top: 2px !important;
+
+    color: var(--iw-deep-green) !important;
+
+    font-size: 17px !important;
+    line-height: 1.08 !important;
+}
+
+body.home-dashboard-page
+.home-kpi-card small {
+    display: block !important;
+
+    margin-top: 2px !important;
+
+    color: var(--iw-muted) !important;
+
+    font-size: 5.5px !important;
+    line-height: 1.25 !important;
+}
+
+
+/* =========================================================
+   EXACT OVERVIEW GRID
+   LEFT  = PLANTATION ZONE HEATMAP
+   RIGHT = SEVERITY + ZONE COVERAGE + MANAGEMENT FOCUS
+========================================================= */
+
+body.home-dashboard-page
+.home-management-grid {
+    display: grid !important;
+
+    grid-template-columns:
+        minmax(
+            0,
+            1.48fr
+        )
+        minmax(
+            270px,
+            0.72fr
+        ) !important;
+
+    gap: 12px !important;
+
+    align-items: stretch !important;
+
+    margin: 0 0 10px !important;
+}
+
+body.home-dashboard-page
+.home-map-column {
+    min-width: 0 !important;
+}
+
+body.home-dashboard-page
+.home-insight-column {
+    min-width: 0 !important;
+
+    display: grid !important;
+
+    grid-template-rows:
+        auto
+        auto
+        1fr !important;
+
+    gap: 0px !important;
+}
+
+
+/* =========================================================
+   PLANTATION HEATMAP
+========================================================= */
+
+body.home-dashboard-page
+.home-map-column
+.plantation-map-shell {
+    display: grid !important;
+
+    grid-template-columns:
+        minmax(
+            0,
+            1.62fr
+        )
+        minmax(
+            190px,
+            0.56fr
+        ) !important;
+
+    gap: 10px !important;
+
+    height: 100% !important;
+    min-height: 474px !important;
+
+    margin: 0 !important;
+}
+
+body.home-dashboard-page
+.home-map-column
+.plantation-map-canvas {
+    min-height: 474px !important;
+
+    padding: 14px !important;
+
+    border-radius: 16px !important;
+}
+
+body.home-dashboard-page
+.plantation-map-title {
+    margin-bottom: 7px !important;
+}
+
+body.home-dashboard-page
+.plantation-map-title h2 {
+    font-size: 14px !important;
+}
+
+body.home-dashboard-page
+.plantation-map-title span {
+    font-size: 6px !important;
+}
+
+body.home-dashboard-page
+.plantation-svg-map {
+    min-height: 405px !important;
+}
+
+body.home-dashboard-page
+.zone-map-svg {
+    width: 100% !important;
+    height: 405px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-panel {
+    min-width: 0 !important;
+
+    border-radius: 16px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-header {
+    padding: 10px 12px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-header h3 {
+    font-size: 10px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-body {
+    padding: 8px 11px 10px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-row {
+    gap: 8px !important;
+
+    padding: 7px 0 !important;
+}
+
+body.home-dashboard-page
+.zone-detail-row span {
+    font-size: 6px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-row strong {
+    font-size: 6.5px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-button {
+    min-height: 29px !important;
+
+    margin-top: 7px !important;
+    padding: 6px 8px !important;
+
+    border-radius: 8px !important;
+
+    font-size: 6px !important;
+}
+
+
+/* =========================================================
+   RIGHT-SIDE BI CARDS
+========================================================= */
+
+body.home-dashboard-page
+.home-insight-card {
+    min-width: 0 !important;
+
+    padding: 12px 13px !important;
+
+    border:
+        1px solid
+        var(--iw-border) !important;
+
+    border-radius: 15px !important;
+
+    background: #ffffff !important;
+
+    box-shadow:
+        0 9px 21px
+        rgba(
+            15,
+            62,
+            46,
+            0.045
+        ) !important;
+}
+
+body.home-dashboard-page
+.home-card-heading {
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+
+    gap: 8px !important;
+
+    margin-bottom: 8px !important;
+}
+
+body.home-dashboard-page
+.home-card-heading h2 {
+    margin: 1px 0 0 !important;
+
+    color: var(--iw-deep-green) !important;
+
+    font-size: 12px !important;
+}
+
+body.home-dashboard-page
+.home-card-heading .page-label {
+    font-size: 6.5px !important;
+}
+
+body.home-dashboard-page
+.home-card-heading a {
+    color: var(--iw-main-green) !important;
+
+    font-size: 5.8px !important;
+    font-weight: 800 !important;
+}
+
+
+/* =========================================================
+   SEVERITY DISTRIBUTION
+========================================================= */
+
+body.home-dashboard-page
+.home-severity-layout {
+    display: grid !important;
+
+    grid-template-columns:
+        100px
+        minmax(
+            0,
+            1fr
+        ) !important;
+
+    gap: 9px !important;
+
+    align-items: center !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut {
+    width: 94px !important;
+    height: 94px !important;
+
+    margin: auto !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut::after {
+    inset: 17px !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut strong {
+    font-size: 15px !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut span {
+    font-size: 5px !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend {
+    display: grid !important;
+
+    gap: 5px !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend > div {
+    display: grid !important;
+
+    grid-template-columns:
+        7px
+        1fr
+        auto !important;
+
+    gap: 5px !important;
+
+    align-items: center !important;
+
+    padding: 4px 0 !important;
+
+    border-bottom:
+        1px solid
+        #edf1ee !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend > div:last-child {
+    border-bottom: 0 !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend span {
+    width: 7px !important;
+    height: 7px !important;
+
+    border-radius: 50% !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend .low span {
+    background: #1f9557 !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend .moderate span {
+    background: #f2c94c !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend .high span {
+    background: #d14e5b !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend b,
+body.home-dashboard-page
+.home-severity-legend strong {
+    font-size: 6px !important;
+}
+
+
+/* =========================================================
+   AVG WEED COVERAGE BY ZONE
+========================================================= */
+
+body.home-dashboard-page
+.home-zone-bars {
+    display: grid !important;
+
+    gap: 7px !important;
+}
+
+body.home-dashboard-page
+.home-zone-bar-row {
+    display: grid !important;
+
+    grid-template-columns:
+        43px
+        minmax(
+            0,
+            1fr
+        )
+        32px !important;
+
+    gap: 6px !important;
+
+    align-items: center !important;
+}
+
+body.home-dashboard-page
+.home-zone-bar-row > span {
+    color: var(--iw-muted) !important;
+
+    font-size: 6px !important;
+}
+
+body.home-dashboard-page
+.home-zone-bar-row > strong {
+    color: var(--iw-deep-green) !important;
+
+    font-size: 6px !important;
+
+    text-align: right !important;
+}
+
+body.home-dashboard-page
+.home-zone-bar-track {
+    height: 7px !important;
+
+    overflow: hidden !important;
+
+    border-radius: 999px !important;
+
+    background: #edf1ee !important;
+}
+
+body.home-dashboard-page
+.home-zone-bar-fill {
+    height: 100% !important;
+
+    border-radius: inherit !important;
+
+    background:
+        var(--iw-main-green) !important;
+}
+
+body.home-dashboard-page
+.home-zone-bar-fill.moderate {
+    background: #e2b52f !important;
+}
+
+body.home-dashboard-page
+.home-zone-bar-fill.high {
+    background: #d14e5b !important;
+}
+
+
+/* =========================================================
+   MANAGEMENT FOCUS
+========================================================= */
+
+body.home-dashboard-page
+.home-management-action {
+    min-height: 0 !important;
+
+    display: grid !important;
+
+    grid-template-columns:
+        34px
+        minmax(
+            0,
+            1fr
+        ) !important;
+
+    gap: 8px !important;
+
+    align-items: start !important;
+
+    padding: 11px !important;
+
+    border:
+        1px solid
+        #eadb9e !important;
+
+    border-radius: 14px !important;
+
+    background:
+        linear-gradient(
+            145deg,
+            #fffdf4,
+            #fff8d8
+        ) !important;
+}
+
+body.home-dashboard-page
+.home-management-action-icon {
+    display: grid !important;
+    place-items: center !important;
+
+    width: 32px !important;
+    height: 32px !important;
+
+    border-radius: 10px !important;
+
+    background: #ffffff !important;
+
+    font-size: 15px !important;
+}
+
+body.home-dashboard-page
+.home-management-action span {
+    display: block !important;
+
+    color: #8a742b !important;
+
+    font-size: 5.5px !important;
+    font-weight: 800 !important;
+
+    letter-spacing: 0.45px !important;
+
+    text-transform: uppercase !important;
+}
+
+body.home-dashboard-page
+.home-management-action strong {
+    display: block !important;
+
+    margin-top: 3px !important;
+
+    color: var(--iw-deep-green) !important;
+
+    font-size: 6.5px !important;
+    line-height: 1.45 !important;
+}
+
+body.home-dashboard-page
+.home-management-action a {
+    display: inline-block !important;
+
+    margin-top: 5px !important;
+
+    color: var(--iw-main-green) !important;
+
+    font-size: 5.8px !important;
+    font-weight: 800 !important;
+}
+
+
+/* =========================================================
+   ABSOLUTELY REMOVE LEGACY RECENT ACTIVITY
+========================================================= */
+
+body.home-dashboard-page
+.dashboard-recent-section,
+body.home-dashboard-page
+.recent-activity-section,
+body.home-dashboard-page
+.dashboard-results-table {
+    display: none !important;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+body.home-dashboard-page
+.app-footer {
+    margin-top: 8px !important;
+
+    padding-top: 0 !important;
+
+    font-size: 7px !important;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1280px) {
+
+    body.home-dashboard-page
+    .home-executive-kpis {
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(
+                    0,
+                    1fr
+                )
+            ) !important;
+    }
+
+    body.home-dashboard-page
+    .home-management-grid {
+        grid-template-columns:
+            1fr !important;
+    }
+
+    body.home-dashboard-page
+    .home-insight-column {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(
+                    0,
+                    1fr
+                )
+            ) !important;
+
+        grid-template-rows:
+            auto !important;
+    }
+
+    body.home-dashboard-page
+    .home-management-action {
+        grid-column:
+            1 / -1 !important;
+    }
+}
+
+@media (max-width: 840px) {
+
+    body.home-dashboard-page
+    .home-executive-kpis,
+    body.home-dashboard-page
+    .home-insight-column {
+        grid-template-columns:
+            1fr !important;
+    }
+
+    body.home-dashboard-page
+    .home-management-action {
+        grid-column:
+            auto !important;
+    }
+
+    body.home-dashboard-page
+    .home-map-column
+    .plantation-map-shell {
+        grid-template-columns:
+            1fr !important;
+    }
+}
+
+
+
+/* =========================================================
+   HOME DASHBOARD — READABILITY REFINEMENT
+   Keep the same one-screen executive layout while making
+   chart labels, KPI text and management insights easier to read.
+========================================================= */
+
+/* Give the right-side analytics column a little more room */
+body.home-dashboard-page
+.home-management-grid {
+    grid-template-columns:
+        minmax(0, 1.42fr)
+        minmax(330px, 0.78fr) !important;
+
+    gap: 12px !important;
+}
+
+
+/* ---------------------------------------------------------
+   KPI READABILITY
+--------------------------------------------------------- */
+
+body.home-dashboard-page
+.home-executive-kpis {
+    gap: 10px !important;
+}
+
+body.home-dashboard-page
+.home-kpi-card {
+    min-height: 82px !important;
+    padding: 11px 12px !important;
+}
+
+body.home-dashboard-page
+.home-kpi-icon {
+    width: 39px !important;
+    min-width: 39px !important;
+    height: 39px !important;
+
+    font-size: 17px !important;
+}
+
+body.home-dashboard-page
+.home-kpi-card span {
+    font-size: 7px !important;
+    line-height: 1.25 !important;
+}
+
+body.home-dashboard-page
+.home-kpi-card strong {
+    font-size: 19px !important;
+}
+
+body.home-dashboard-page
+.home-kpi-card small {
+    font-size: 6.2px !important;
+    line-height: 1.35 !important;
+}
+
+
+/* ---------------------------------------------------------
+   RIGHT-SIDE CARDS — BETTER USE OF SPACE
+--------------------------------------------------------- */
+
+body.home-dashboard-page
+.home-insight-column {
+    grid-template-rows:
+        1.08fr
+        0.92fr
+        0.72fr !important;
+
+    gap: 10px !important;
+}
+
+body.home-dashboard-page
+.home-insight-card {
+    display: flex !important;
+    flex-direction: column !important;
+
+    min-height: 0 !important;
+
+    padding: 13px 14px !important;
+}
+
+body.home-dashboard-page
+.home-card-heading {
+    flex: 0 0 auto !important;
+
+    margin-bottom: 9px !important;
+}
+
+body.home-dashboard-page
+.home-card-heading h2 {
+    font-size: 13px !important;
+    line-height: 1.2 !important;
+}
+
+body.home-dashboard-page
+.home-card-heading .page-label {
+    font-size: 7px !important;
+}
+
+body.home-dashboard-page
+.home-card-heading a {
+    font-size: 6.2px !important;
+}
+
+
+/* ---------------------------------------------------------
+   SEVERITY DISTRIBUTION
+   Keep donut fully inside the card and enlarge labels.
+--------------------------------------------------------- */
+
+body.home-dashboard-page
+.home-severity-layout {
+    flex: 1 !important;
+
+    grid-template-columns:
+        108px
+        minmax(0, 1fr) !important;
+
+    gap: 11px !important;
+
+    align-items: center !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut {
+    width: 102px !important;
+    height: 102px !important;
+
+    margin: 0 auto !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut::after {
+    inset: 19px !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut strong {
+    font-size: 17px !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut span {
+    font-size: 5.8px !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend {
+    gap: 4px !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend > div {
+    grid-template-columns:
+        8px
+        minmax(0, 1fr)
+        auto !important;
+
+    gap: 6px !important;
+
+    padding: 5px 0 !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend span {
+    width: 8px !important;
+    height: 8px !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend b {
+    font-size: 6.8px !important;
+    line-height: 1.2 !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend strong {
+    font-size: 6.8px !important;
+}
+
+
+/* ---------------------------------------------------------
+   AVERAGE WEED COVERAGE BY ZONE
+   Make bars longer and labels easier to scan.
+--------------------------------------------------------- */
+
+body.home-dashboard-page
+.home-zone-bars {
+    flex: 1 !important;
+
+    display: grid !important;
+    align-content: center !important;
+
+    gap: 8px !important;
+}
+
+body.home-dashboard-page
+.home-zone-bar-row {
+    grid-template-columns:
+        46px
+        minmax(0, 1fr)
+        36px !important;
+
+    gap: 7px !important;
+}
+
+body.home-dashboard-page
+.home-zone-bar-row > span,
+body.home-dashboard-page
+.home-zone-bar-row > strong {
+    font-size: 6.7px !important;
+}
+
+body.home-dashboard-page
+.home-zone-bar-track {
+    height: 8px !important;
+}
+
+
+/* ---------------------------------------------------------
+   MANAGEMENT FOCUS
+--------------------------------------------------------- */
+
+body.home-dashboard-page
+.home-management-action {
+    align-self: stretch !important;
+
+    grid-template-columns:
+        36px
+        minmax(0, 1fr) !important;
+
+    gap: 9px !important;
+
+    padding: 12px 13px !important;
+}
+
+body.home-dashboard-page
+.home-management-action-icon {
+    width: 34px !important;
+    height: 34px !important;
+
+    font-size: 16px !important;
+}
+
+body.home-dashboard-page
+.home-management-action span {
+    font-size: 6.2px !important;
+}
+
+body.home-dashboard-page
+.home-management-action strong {
+    margin-top: 4px !important;
+
+    font-size: 7.2px !important;
+    line-height: 1.5 !important;
+}
+
+body.home-dashboard-page
+.home-management-action a {
+    margin-top: 6px !important;
+
+    font-size: 6.4px !important;
+}
+
+
+/* ---------------------------------------------------------
+   MAP TEXT
+   Slight increase without making the heatmap taller.
+--------------------------------------------------------- */
+
+body.home-dashboard-page
+.plantation-map-title h2 {
+    font-size: 15px !important;
+}
+
+body.home-dashboard-page
+.plantation-map-title span {
+    font-size: 6.4px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-header h3 {
+    font-size: 10.5px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-row span {
+    font-size: 6.3px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-row strong {
+    font-size: 6.8px !important;
+}
+
+
+/* ---------------------------------------------------------
+   Keep overview within desktop viewport
+--------------------------------------------------------- */
+
+@media (min-width: 1281px) {
+
+    body.home-dashboard-page
+    .home-map-column
+    .plantation-map-shell {
+        min-height: 468px !important;
+    }
+
+    body.home-dashboard-page
+    .home-map-column
+    .plantation-map-canvas {
+        min-height: 468px !important;
+    }
+
+    body.home-dashboard-page
+    .plantation-svg-map {
+        min-height: 398px !important;
+    }
+
+    body.home-dashboard-page
+    .zone-map-svg {
+        height: 398px !important;
+    }
+}
+
+
+
+/* =========================================================
+   FINAL SEVERITY RULE UPDATE
+   Low  = weed coverage below 5%
+   High = weed coverage 5% and above
+========================================================= */
+
+/* Zone map no longer uses a Moderate business category. */
+body.home-dashboard-page
+.svg-zone.moderate,
+body.home-dashboard-page
+.home-zone-bar-fill.moderate {
+    fill: #d94b5b !important;
+    background: #d94b5b !important;
+}
+
+
+/* ---------------------------------------------------------
+   SEVERITY DONUT — FIXED TWO-CATEGORY PARAMETER
+   The previous global style used Low + Moderate + High and
+   also gave ::after a fixed width/height. That caused the
+   inner white circle to render incorrectly at dashboard size.
+--------------------------------------------------------- */
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut {
+    --low-value: 0%;
+    --high-value: 0%;
+
+    position: relative !important;
+
+    width: 108px !important;
+    height: 108px !important;
+
+    display: grid !important;
+    place-items: center !important;
+
+    margin: 0 auto !important;
+
+    border-radius: 50% !important;
+
+    background:
+        conic-gradient(
+            #2f9a52 0 var(--low-value),
+            #d94b5b var(--low-value) 100%
+        ) !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut::after {
+    content: "" !important;
+
+    position: absolute !important;
+
+    inset: 22px !important;
+
+    width: auto !important;
+    height: auto !important;
+
+    border-radius: 50% !important;
+
+    background: #ffffff !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut > div {
+    position: relative !important;
+    z-index: 2 !important;
+
+    text-align: center !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut strong {
+    display: block !important;
+
+    color: var(--iw-deep-green) !important;
+
+    font-size: 18px !important;
+    line-height: 1 !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut span {
+    display: block !important;
+
+    margin-top: 3px !important;
+
+    color: var(--iw-muted) !important;
+
+    font-size: 6px !important;
+}
+
+
+/* Two-row legend only */
+body.home-dashboard-page
+.home-severity-legend {
+    display: grid !important;
+
+    gap: 8px !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend > div {
+    display: grid !important;
+
+    grid-template-columns:
+        9px
+        minmax(0, 1fr)
+        auto !important;
+
+    gap: 7px !important;
+
+    align-items: center !important;
+
+    padding: 7px 0 !important;
+
+    border-bottom:
+        1px solid
+        #edf1ee !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend > div:last-child {
+    border-bottom: 0 !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend .low span {
+    background: #2f9a52 !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend .high span {
+    background: #d94b5b !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend b,
+body.home-dashboard-page
+.home-severity-legend strong {
+    font-size: 7.2px !important;
+}
+
+
+/* ---------------------------------------------------------
+   ZONE DETAIL PANEL — improve readability
+--------------------------------------------------------- */
+
+body.home-dashboard-page
+.zone-detail-panel {
+    background: #ffffff !important;
+}
+
+body.home-dashboard-page
+.zone-detail-header {
+    padding: 12px 14px !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0f653f,
+            #17864f
+        ) !important;
+}
+
+body.home-dashboard-page
+.zone-detail-header h3 {
+    color: #ffffff !important;
+
+    font-size: 11.5px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-body {
+    padding: 10px 14px 13px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-row {
+    grid-template-columns:
+        minmax(92px, 0.9fr)
+        minmax(0, 1.1fr) !important;
+
+    gap: 12px !important;
+
+    padding: 8px 0 !important;
+}
+
+body.home-dashboard-page
+.zone-detail-row span {
+    color: var(--iw-muted) !important;
+
+    font-size: 6.8px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-row strong {
+    color: var(--iw-deep-green) !important;
+
+    font-size: 7.2px !important;
+    line-height: 1.35 !important;
+
+    text-align: right !important;
+}
+
+body.home-dashboard-page
+.zone-detail-button {
+    min-height: 34px !important;
+
+    margin-top: 9px !important;
+
+    font-size: 6.8px !important;
+}
+
+
+/* High zones should be visually red in the map / bar context. */
+body.home-dashboard-page
+.svg-zone.high {
+    fill: rgba(213, 63, 79, 0.72) !important;
+}
+
+body.home-dashboard-page
+.home-zone-bar-fill.high {
+    background: #d94b5b !important;
+}
+
+
+/* Remove any Moderate legend remnants that might come from
+   older shared CSS. */
+body.home-dashboard-page
+.home-severity-legend .moderate {
+    display: none !important;
+}
+
+/* =========================================================
+   SVG ZONE TRANSPARENCY
+========================================================= */
+
+body.home-dashboard-page
+.svg-zone {
+    fill: rgba(31, 149, 87, 0.30) !important;
+
+    stroke: #4fd477 !important;
+    stroke-width: 5 !important;
+}
+
+body.home-dashboard-page
+.svg-zone.high {
+    fill: rgba(213, 63, 79, 0.55) !important;
+
+    stroke: #ff6673 !important;
+}

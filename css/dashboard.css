@@ -1,0 +1,2810 @@
+/* =========================================================
+   INSPECTOR WEEDS — HOME DASHBOARD
+   File: css/dashboard.css
+
+   Purpose:
+   - Exact executive overview layout
+   - No Recent Activity section
+   - Five KPI cards in one row
+   - Plantation heatmap on the LEFT
+   - Severity Distribution, Avg Weed Coverage by Zone,
+     and Management Focus stacked on the RIGHT
+========================================================= */
+
+
+/* =========================================================
+   PAGE SCOPE
+========================================================= */
+
+body.home-dashboard-page {
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(242, 201, 76, 0.08),
+            transparent 24%
+        ),
+        linear-gradient(
+            180deg,
+            #fbfcfb 0%,
+            #f2f7f3 100%
+        );
+}
+
+body.home-dashboard-page .app-main {
+    min-width: 0;
+}
+
+
+/* =========================================================
+   HEADER — COMPACT EXECUTIVE OVERVIEW
+========================================================= */
+
+body.home-dashboard-page
+.dashboard-page-header {
+    min-height: 112px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+
+    gap: 22px !important;
+
+    margin-bottom: 12px !important;
+    padding: 18px 26px !important;
+
+    border-radius: 22px !important;
+
+    color: #ffffff !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0f653f 0%,
+            #13804d 58%,
+            #1e9a58 100%
+        ) !important;
+
+    box-shadow:
+        0 14px 30px
+        rgba(14, 72, 49, 0.11) !important;
+}
+
+body.home-dashboard-page
+.dashboard-page-header h1 {
+    margin: 3px 0 5px !important;
+
+    color: #ffffff !important;
+
+    font-size: 27px !important;
+    line-height: 1.08 !important;
+}
+
+body.home-dashboard-page
+.dashboard-page-header .page-label {
+    color: #f2c94c !important;
+
+    font-size: 9px !important;
+}
+
+body.home-dashboard-page
+.dashboard-page-header p:not(.page-label) {
+    max-width: 760px !important;
+    margin: 0 !important;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.84
+        ) !important;
+
+    font-size: 9px !important;
+    line-height: 1.4 !important;
+}
+
+body.home-dashboard-page
+.header-user {
+    min-width: 205px !important;
+
+    padding: 9px 12px !important;
+}
+
+body.home-dashboard-page
+.header-avatar {
+    width: 44px !important;
+    height: 44px !important;
+
+    font-size: 17px !important;
+}
+
+
+/* =========================================================
+   KPI ROW
+========================================================= */
+
+body.home-dashboard-page
+.home-executive-kpis {
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(
+            5,
+            minmax(0, 1fr)
+        ) !important;
+
+    gap: 9px !important;
+
+    margin: 0 0 12px !important;
+}
+
+body.home-dashboard-page
+.home-kpi-card {
+    position: relative !important;
+    overflow: hidden !important;
+
+    display: flex !important;
+    align-items: center !important;
+
+    gap: 9px !important;
+
+    min-width: 0 !important;
+    min-height: 78px !important;
+
+    padding: 10px 11px !important;
+
+    border:
+        1px solid
+        rgba(
+            224,
+            184,
+            63,
+            0.56
+        ) !important;
+
+    border-radius: 14px !important;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff 0%,
+            #fffdf6 60%,
+            #faf1d2 100%
+        ) !important;
+
+    box-shadow:
+        0 9px 20px
+        rgba(
+            91,
+            73,
+            19,
+            0.055
+        ) !important;
+}
+
+body.home-dashboard-page
+.home-kpi-card::after {
+    content: "" !important;
+
+    position: absolute !important;
+
+    right: -32px !important;
+    bottom: -42px !important;
+
+    width: 86px !important;
+    height: 86px !important;
+
+    border-radius: 50% !important;
+
+    background:
+        rgba(
+            242,
+            201,
+            76,
+            0.10
+        ) !important;
+}
+
+body.home-dashboard-page
+.home-kpi-card > * {
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+body.home-dashboard-page
+.home-kpi-icon {
+    display: grid !important;
+    place-items: center !important;
+
+    width: 36px !important;
+    min-width: 36px !important;
+    height: 36px !important;
+
+    border:
+        1px solid
+        #eadb9e !important;
+
+    border-radius: 10px !important;
+
+    background:
+        linear-gradient(
+            145deg,
+            #fff7d7,
+            #f2e2a4
+        ) !important;
+
+    font-size: 16px !important;
+}
+
+body.home-dashboard-page
+.home-kpi-card span {
+    display: block !important;
+
+    color: #756945 !important;
+
+    font-size: 6.2px !important;
+    font-weight: 800 !important;
+
+    letter-spacing: 0.32px !important;
+
+    text-transform: uppercase !important;
+}
+
+body.home-dashboard-page
+.home-kpi-card strong {
+    display: block !important;
+
+    margin-top: 2px !important;
+
+    color: var(--iw-deep-green) !important;
+
+    font-size: 17px !important;
+    line-height: 1.08 !important;
+}
+
+body.home-dashboard-page
+.home-kpi-card small {
+    display: block !important;
+
+    margin-top: 2px !important;
+
+    color: var(--iw-muted) !important;
+
+    font-size: 5.5px !important;
+    line-height: 1.25 !important;
+}
+
+
+/* =========================================================
+   EXACT OVERVIEW GRID
+   LEFT  = PLANTATION ZONE HEATMAP
+   RIGHT = SEVERITY + ZONE COVERAGE + MANAGEMENT FOCUS
+========================================================= */
+
+body.home-dashboard-page
+.home-management-grid {
+    display: grid !important;
+
+    grid-template-columns:
+        minmax(
+            0,
+            1.48fr
+        )
+        minmax(
+            270px,
+            0.72fr
+        ) !important;
+
+    gap: 12px !important;
+
+    align-items: stretch !important;
+
+    margin: 0 0 10px !important;
+}
+
+body.home-dashboard-page
+.home-map-column {
+    min-width: 0 !important;
+}
+
+body.home-dashboard-page
+.home-insight-column {
+    min-width: 0 !important;
+
+    display: grid !important;
+
+    grid-template-rows:
+        auto
+        auto
+        1fr !important;
+
+    gap: 0px !important;
+}
+
+
+/* =========================================================
+   PLANTATION HEATMAP
+========================================================= */
+
+body.home-dashboard-page
+.home-map-column
+.plantation-map-shell {
+    display: grid !important;
+
+    grid-template-columns:
+        minmax(
+            0,
+            1.62fr
+        )
+        minmax(
+            190px,
+            0.56fr
+        ) !important;
+
+    gap: 10px !important;
+
+    height: 100% !important;
+    min-height: 474px !important;
+
+    margin: 0 !important;
+}
+
+body.home-dashboard-page
+.home-map-column
+.plantation-map-canvas {
+    min-height: 474px !important;
+
+    padding: 14px !important;
+
+    border-radius: 16px !important;
+}
+
+body.home-dashboard-page
+.plantation-map-title {
+    margin-bottom: 7px !important;
+}
+
+body.home-dashboard-page
+.plantation-map-title h2 {
+    font-size: 14px !important;
+}
+
+body.home-dashboard-page
+.plantation-map-title span {
+    font-size: 6px !important;
+}
+
+body.home-dashboard-page
+.plantation-svg-map {
+    min-height: 405px !important;
+}
+
+body.home-dashboard-page
+.zone-map-svg {
+    width: 100% !important;
+    height: 405px !important;
+}
+
+/* Treatment decision label shown between priority share and severity. */
+body.home-dashboard-page
+.svg-zone-label .priority-text {
+    fill: #ffffff !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.35px !important;
+    text-anchor: middle !important;
+    pointer-events: none !important;
+}
+
+body.home-dashboard-page
+.zone-detail-panel {
+    min-width: 0 !important;
+
+    border-radius: 16px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-header {
+    padding: 10px 12px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-header h3 {
+    font-size: 10px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-body {
+    padding: 8px 11px 10px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-row {
+    gap: 8px !important;
+
+    padding: 7px 0 !important;
+}
+
+body.home-dashboard-page
+.zone-detail-row span {
+    font-size: 6px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-row strong {
+    font-size: 6.5px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-button {
+    min-height: 29px !important;
+
+    margin-top: 7px !important;
+    padding: 6px 8px !important;
+
+    border-radius: 8px !important;
+
+    font-size: 6px !important;
+}
+
+
+/* =========================================================
+   RIGHT-SIDE BI CARDS
+========================================================= */
+
+body.home-dashboard-page
+.home-insight-card {
+    min-width: 0 !important;
+
+    padding: 12px 13px !important;
+
+    border:
+        1px solid
+        var(--iw-border) !important;
+
+    border-radius: 15px !important;
+
+    background: #ffffff !important;
+
+    box-shadow:
+        0 9px 21px
+        rgba(
+            15,
+            62,
+            46,
+            0.045
+        ) !important;
+}
+
+body.home-dashboard-page
+.home-card-heading {
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+
+    gap: 8px !important;
+
+    margin-bottom: 8px !important;
+}
+
+body.home-dashboard-page
+.home-card-heading h2 {
+    margin: 1px 0 0 !important;
+
+    color: var(--iw-deep-green) !important;
+
+    font-size: 12px !important;
+}
+
+body.home-dashboard-page
+.home-card-heading .page-label {
+    font-size: 6.5px !important;
+}
+
+body.home-dashboard-page
+.home-card-heading a {
+    color: var(--iw-main-green) !important;
+
+    font-size: 5.8px !important;
+    font-weight: 800 !important;
+}
+
+
+/* =========================================================
+   SEVERITY DISTRIBUTION
+========================================================= */
+
+body.home-dashboard-page
+.home-severity-layout {
+    display: grid !important;
+
+    grid-template-columns:
+        100px
+        minmax(
+            0,
+            1fr
+        ) !important;
+
+    gap: 9px !important;
+
+    align-items: center !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut {
+    width: 94px !important;
+    height: 94px !important;
+
+    margin: auto !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut::after {
+    inset: 17px !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut strong {
+    font-size: 15px !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut span {
+    font-size: 5px !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend {
+    display: grid !important;
+
+    gap: 5px !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend > div {
+    display: grid !important;
+
+    grid-template-columns:
+        7px
+        1fr
+        auto !important;
+
+    gap: 5px !important;
+
+    align-items: center !important;
+
+    padding: 4px 0 !important;
+
+    border-bottom:
+        1px solid
+        #edf1ee !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend > div:last-child {
+    border-bottom: 0 !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend span {
+    width: 7px !important;
+    height: 7px !important;
+
+    border-radius: 50% !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend .low span {
+    background: #1f9557 !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend .moderate span {
+    background: #f2c94c !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend .high span {
+    background: #d14e5b !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend b,
+body.home-dashboard-page
+.home-severity-legend strong {
+    font-size: 6px !important;
+}
+
+
+/* =========================================================
+   AVG WEED COVERAGE BY ZONE
+========================================================= */
+
+body.home-dashboard-page
+.home-zone-bars {
+    display: grid !important;
+
+    gap: 7px !important;
+}
+
+body.home-dashboard-page
+.home-zone-bar-row {
+    display: grid !important;
+
+    grid-template-columns:
+        43px
+        minmax(
+            0,
+            1fr
+        )
+        32px !important;
+
+    gap: 6px !important;
+
+    align-items: center !important;
+}
+
+body.home-dashboard-page
+.home-zone-bar-row > span {
+    color: var(--iw-muted) !important;
+
+    font-size: 6px !important;
+}
+
+body.home-dashboard-page
+.home-zone-bar-row > strong {
+    color: var(--iw-deep-green) !important;
+
+    font-size: 6px !important;
+
+    text-align: right !important;
+}
+
+body.home-dashboard-page
+.home-zone-bar-track {
+    height: 7px !important;
+
+    overflow: hidden !important;
+
+    border-radius: 999px !important;
+
+    background: #edf1ee !important;
+}
+
+body.home-dashboard-page
+.home-zone-bar-fill {
+    height: 100% !important;
+
+    border-radius: inherit !important;
+
+    background:
+        var(--iw-main-green) !important;
+}
+
+body.home-dashboard-page
+.home-zone-bar-fill.moderate {
+    background: #e2b52f !important;
+}
+
+body.home-dashboard-page
+.home-zone-bar-fill.high {
+    background: #d14e5b !important;
+}
+
+
+/* =========================================================
+   MANAGEMENT FOCUS
+========================================================= */
+
+body.home-dashboard-page
+.home-management-action {
+    min-height: 0 !important;
+
+    display: grid !important;
+
+    grid-template-columns:
+        34px
+        minmax(
+            0,
+            1fr
+        ) !important;
+
+    gap: 8px !important;
+
+    align-items: start !important;
+
+    padding: 11px !important;
+
+    border:
+        1px solid
+        #eadb9e !important;
+
+    border-radius: 14px !important;
+
+    background:
+        linear-gradient(
+            145deg,
+            #fffdf4,
+            #fff8d8
+        ) !important;
+}
+
+body.home-dashboard-page
+.home-management-action-icon {
+    display: grid !important;
+    place-items: center !important;
+
+    width: 32px !important;
+    height: 32px !important;
+
+    border-radius: 10px !important;
+
+    background: #ffffff !important;
+
+    font-size: 15px !important;
+}
+
+body.home-dashboard-page
+.home-management-action span {
+    display: block !important;
+
+    color: #8a742b !important;
+
+    font-size: 5.5px !important;
+    font-weight: 800 !important;
+
+    letter-spacing: 0.45px !important;
+
+    text-transform: uppercase !important;
+}
+
+body.home-dashboard-page
+.home-management-action strong {
+    display: block !important;
+
+    margin-top: 3px !important;
+
+    color: var(--iw-deep-green) !important;
+
+    font-size: 6.5px !important;
+    line-height: 1.45 !important;
+}
+
+body.home-dashboard-page
+.home-management-action a {
+    display: inline-block !important;
+
+    margin-top: 5px !important;
+
+    color: var(--iw-main-green) !important;
+
+    font-size: 5.8px !important;
+    font-weight: 800 !important;
+}
+
+
+/* =========================================================
+   ABSOLUTELY REMOVE LEGACY RECENT ACTIVITY
+========================================================= */
+
+body.home-dashboard-page
+.dashboard-recent-section,
+body.home-dashboard-page
+.recent-activity-section,
+body.home-dashboard-page
+.dashboard-results-table {
+    display: none !important;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+body.home-dashboard-page
+.app-footer {
+    margin-top: 8px !important;
+
+    padding-top: 0 !important;
+
+    font-size: 7px !important;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1280px) {
+
+    body.home-dashboard-page
+    .home-executive-kpis {
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(
+                    0,
+                    1fr
+                )
+            ) !important;
+    }
+
+    body.home-dashboard-page
+    .home-management-grid {
+        grid-template-columns:
+            1fr !important;
+    }
+
+    body.home-dashboard-page
+    .home-insight-column {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(
+                    0,
+                    1fr
+                )
+            ) !important;
+
+        grid-template-rows:
+            auto !important;
+    }
+
+    body.home-dashboard-page
+    .home-management-action {
+        grid-column:
+            1 / -1 !important;
+    }
+}
+
+@media (max-width: 840px) {
+
+    body.home-dashboard-page
+    .home-executive-kpis,
+    body.home-dashboard-page
+    .home-insight-column {
+        grid-template-columns:
+            1fr !important;
+    }
+
+    body.home-dashboard-page
+    .home-management-action {
+        grid-column:
+            auto !important;
+    }
+
+    body.home-dashboard-page
+    .home-map-column
+    .plantation-map-shell {
+        grid-template-columns:
+            1fr !important;
+    }
+}
+
+
+
+/* =========================================================
+   HOME DASHBOARD — READABILITY REFINEMENT
+   Keep the same one-screen executive layout while making
+   chart labels, KPI text and management insights easier to read.
+========================================================= */
+
+/* Give the right-side analytics column a little more room */
+body.home-dashboard-page
+.home-management-grid {
+    grid-template-columns:
+        minmax(0, 1.42fr)
+        minmax(330px, 0.78fr) !important;
+
+    gap: 12px !important;
+}
+
+
+/* ---------------------------------------------------------
+   KPI READABILITY
+--------------------------------------------------------- */
+
+body.home-dashboard-page
+.home-executive-kpis {
+    gap: 10px !important;
+}
+
+body.home-dashboard-page
+.home-kpi-card {
+    min-height: 82px !important;
+    padding: 11px 12px !important;
+}
+
+body.home-dashboard-page
+.home-kpi-icon {
+    width: 39px !important;
+    min-width: 39px !important;
+    height: 39px !important;
+
+    font-size: 17px !important;
+}
+
+body.home-dashboard-page
+.home-kpi-card span {
+    font-size: 7px !important;
+    line-height: 1.25 !important;
+}
+
+body.home-dashboard-page
+.home-kpi-card strong {
+    font-size: 19px !important;
+}
+
+body.home-dashboard-page
+.home-kpi-card small {
+    font-size: 6.2px !important;
+    line-height: 1.35 !important;
+}
+
+
+/* ---------------------------------------------------------
+   RIGHT-SIDE CARDS — BETTER USE OF SPACE
+--------------------------------------------------------- */
+
+body.home-dashboard-page
+.home-insight-column {
+    grid-template-rows:
+        1.08fr
+        0.92fr
+        0.72fr !important;
+
+    gap: 10px !important;
+}
+
+body.home-dashboard-page
+.home-insight-card {
+    display: flex !important;
+    flex-direction: column !important;
+
+    min-height: 0 !important;
+
+    padding: 13px 14px !important;
+}
+
+body.home-dashboard-page
+.home-card-heading {
+    flex: 0 0 auto !important;
+
+    margin-bottom: 9px !important;
+}
+
+body.home-dashboard-page
+.home-card-heading h2 {
+    font-size: 13px !important;
+    line-height: 1.2 !important;
+}
+
+body.home-dashboard-page
+.home-card-heading .page-label {
+    font-size: 7px !important;
+}
+
+body.home-dashboard-page
+.home-card-heading a {
+    font-size: 6.2px !important;
+}
+
+
+/* ---------------------------------------------------------
+   SEVERITY DISTRIBUTION
+   Keep donut fully inside the card and enlarge labels.
+--------------------------------------------------------- */
+
+body.home-dashboard-page
+.home-severity-layout {
+    flex: 1 !important;
+
+    grid-template-columns:
+        108px
+        minmax(0, 1fr) !important;
+
+    gap: 11px !important;
+
+    align-items: center !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut {
+    width: 102px !important;
+    height: 102px !important;
+
+    margin: 0 auto !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut::after {
+    inset: 19px !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut strong {
+    font-size: 17px !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut span {
+    font-size: 5.8px !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend {
+    gap: 4px !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend > div {
+    grid-template-columns:
+        8px
+        minmax(0, 1fr)
+        auto !important;
+
+    gap: 6px !important;
+
+    padding: 5px 0 !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend span {
+    width: 8px !important;
+    height: 8px !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend b {
+    font-size: 6.8px !important;
+    line-height: 1.2 !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend strong {
+    font-size: 6.8px !important;
+}
+
+
+/* ---------------------------------------------------------
+   AVERAGE WEED COVERAGE BY ZONE
+   Make bars longer and labels easier to scan.
+--------------------------------------------------------- */
+
+body.home-dashboard-page
+.home-zone-bars {
+    flex: 1 !important;
+
+    display: grid !important;
+    align-content: center !important;
+
+    gap: 8px !important;
+}
+
+body.home-dashboard-page
+.home-zone-bar-row {
+    grid-template-columns:
+        46px
+        minmax(0, 1fr)
+        36px !important;
+
+    gap: 7px !important;
+}
+
+body.home-dashboard-page
+.home-zone-bar-row > span,
+body.home-dashboard-page
+.home-zone-bar-row > strong {
+    font-size: 6.7px !important;
+}
+
+body.home-dashboard-page
+.home-zone-bar-track {
+    height: 8px !important;
+}
+
+
+/* ---------------------------------------------------------
+   MANAGEMENT FOCUS
+--------------------------------------------------------- */
+
+body.home-dashboard-page
+.home-management-action {
+    align-self: stretch !important;
+
+    grid-template-columns:
+        36px
+        minmax(0, 1fr) !important;
+
+    gap: 9px !important;
+
+    padding: 12px 13px !important;
+}
+
+body.home-dashboard-page
+.home-management-action-icon {
+    width: 34px !important;
+    height: 34px !important;
+
+    font-size: 16px !important;
+}
+
+body.home-dashboard-page
+.home-management-action span {
+    font-size: 6.2px !important;
+}
+
+body.home-dashboard-page
+.home-management-action strong {
+    margin-top: 4px !important;
+
+    font-size: 7.2px !important;
+    line-height: 1.5 !important;
+}
+
+body.home-dashboard-page
+.home-management-action a {
+    margin-top: 6px !important;
+
+    font-size: 6.4px !important;
+}
+
+
+/* ---------------------------------------------------------
+   MAP TEXT
+   Slight increase without making the heatmap taller.
+--------------------------------------------------------- */
+
+body.home-dashboard-page
+.plantation-map-title h2 {
+    font-size: 15px !important;
+}
+
+body.home-dashboard-page
+.plantation-map-title span {
+    font-size: 6.4px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-header h3 {
+    font-size: 10.5px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-row span {
+    font-size: 6.3px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-row strong {
+    font-size: 6.8px !important;
+}
+
+
+/* ---------------------------------------------------------
+   Keep overview within desktop viewport
+--------------------------------------------------------- */
+
+@media (min-width: 1281px) {
+
+    body.home-dashboard-page
+    .home-map-column
+    .plantation-map-shell {
+        min-height: 468px !important;
+    }
+
+    body.home-dashboard-page
+    .home-map-column
+    .plantation-map-canvas {
+        min-height: 468px !important;
+    }
+
+    body.home-dashboard-page
+    .plantation-svg-map {
+        min-height: 398px !important;
+    }
+
+    body.home-dashboard-page
+    .zone-map-svg {
+        height: 398px !important;
+    }
+
+    body.home-dashboard-page .svg-zone-label .rate-text {
+        fill: #ffffff !important;
+        text-anchor: middle !important;
+        pointer-events: none !important;
+    }
+
+    body.home-dashboard-page .zone-map-svg polygon.svg-zone.workload-none {
+        fill: rgba(31, 142, 74, 0.56) !important;
+        stroke: #51d278 !important;
+    }
+
+    body.home-dashboard-page .zone-map-svg polygon.svg-zone.workload-low {
+        fill: rgba(221, 190, 51, 0.68) !important;
+        stroke: #f2d14f !important;
+    }
+
+    body.home-dashboard-page .zone-map-svg polygon.svg-zone.workload-medium {
+        fill: rgba(224, 123, 38, 0.68) !important;
+        stroke: #f29a4a !important;
+    }
+
+    body.home-dashboard-page .zone-map-svg polygon.svg-zone.workload-high {
+        fill: rgba(177, 48, 54, 0.72) !important;
+        stroke: #ef5e67 !important;
+    }
+
+    body.home-dashboard-page .home-insight-column {
+        grid-template-rows: minmax(0, 0.9fr) minmax(0, 1.1fr) !important;
+    }
+
+    body.home-dashboard-page .home-card-heading small {
+        display: block !important;
+        margin-top: 3px !important;
+        color: var(--iw-muted) !important;
+        font-size: 6.5px !important;
+    }
+
+    body.home-dashboard-page .home-zone-bars {
+        align-content: center !important;
+        gap: 10px !important;
+    }
+
+    body.home-dashboard-page .home-zone-bar-row {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) auto !important;
+        gap: 4px 8px !important;
+    }
+
+    body.home-dashboard-page .home-zone-bar-heading {
+        display: flex !important;
+        justify-content: space-between !important;
+        gap: 8px !important;
+    }
+
+    body.home-dashboard-page .home-zone-bar-heading span,
+    body.home-dashboard-page .home-zone-bar-heading strong {
+        color: var(--iw-deep-green) !important;
+        font-size: 7px !important;
+    }
+
+    body.home-dashboard-page .home-zone-bar-row .home-zone-bar-track,
+    body.home-dashboard-page .home-zone-bar-row > small {
+        grid-column: 1 / -1 !important;
+    }
+
+    body.home-dashboard-page .home-zone-bar-row > small {
+        color: var(--iw-muted) !important;
+        font-size: 6.5px !important;
+    }
+
+    body.home-dashboard-page .home-zone-bar-fill.workload-none {
+        background: #23894d !important;
+    }
+
+    body.home-dashboard-page .home-zone-bar-fill.workload-low {
+        background: #d6b735 !important;
+    }
+
+    body.home-dashboard-page .home-zone-bar-fill.workload-medium {
+        background: #df7927 !important;
+    }
+
+    body.home-dashboard-page .home-zone-bar-fill.workload-high {
+        background: #c64048 !important;
+    }
+
+    body.home-dashboard-page .zone-detail-row span {
+        font-size: 7px !important;
+    }
+
+    body.home-dashboard-page .zone-detail-row strong {
+        font-size: 7.5px !important;
+    }
+}
+
+/* =========================================================
+   COMPACT BI LAYOUT OVERRIDE
+========================================================= */
+
+body.home-dashboard-page .home-management-grid {
+    align-items: start !important;
+}
+
+body.home-dashboard-page .home-map-column,
+body.home-dashboard-page .home-insight-column {
+    height: auto !important;
+}
+
+body.home-dashboard-page .home-map-column .plantation-map-shell {
+    height: 530px !important;
+    min-height: 530px !important;
+}
+
+body.home-dashboard-page .home-map-column .plantation-map-canvas,
+body.home-dashboard-page .zone-detail-panel {
+    height: 530px !important;
+    min-height: 530px !important;
+}
+
+body.home-dashboard-page .plantation-svg-map,
+body.home-dashboard-page .zone-map-svg {
+    height: 445px !important;
+    min-height: 445px !important;
+}
+
+body.home-dashboard-page .plantation-map-canvas {
+    position: relative !important;
+}
+
+body.home-dashboard-page .zone-detail-body {
+    height: calc(530px - 52px) !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+body.home-dashboard-page .zone-detail-row {
+    flex: 0 0 auto !important;
+}
+
+body.home-dashboard-page .zone-detail-button {
+    margin-top: auto !important;
+}
+
+body.home-dashboard-page .home-insight-column {
+    display: grid !important;
+    grid-template-rows: 176px 344px !important;
+    gap: 10px !important;
+}
+
+body.home-dashboard-page .home-insight-card {
+    min-height: 0 !important;
+    overflow: hidden !important;
+}
+
+body.home-dashboard-page .home-zone-bars {
+    gap: 7px !important;
+}
+
+body.home-dashboard-page .home-zone-bar-row {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    gap: 3px 8px !important;
+}
+
+body.home-dashboard-page .home-zone-bar-heading {
+    grid-column: 1 / -1 !important;
+    align-items: baseline !important;
+}
+
+body.home-dashboard-page .home-zone-bar-heading span {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+}
+
+body.home-dashboard-page .home-zone-bar-heading strong {
+    font-size: 12px !important;
+    font-weight: 800 !important;
+}
+
+body.home-dashboard-page .home-zone-bar-track {
+    grid-column: 1 / -1 !important;
+    height: 8px !important;
+}
+
+body.home-dashboard-page .home-zone-bar-row > small {
+    grid-column: 1 / -1 !important;
+    font-size: 8px !important;
+    line-height: 1.25 !important;
+}
+
+body.home-dashboard-page .svg-zone.workload-none {
+    fill: rgba(31, 142, 74, 0.56) !important;
+    stroke: #51d278 !important;
+}
+
+body.home-dashboard-page .svg-zone.workload-low {
+    fill: rgba(221, 190, 51, 0.68) !important;
+    stroke: #f2d14f !important;
+}
+
+body.home-dashboard-page .svg-zone.workload-medium {
+    fill: rgba(224, 123, 38, 0.68) !important;
+    stroke: #f29a4a !important;
+}
+
+body.home-dashboard-page .svg-zone.workload-high {
+    fill: rgba(177, 48, 54, 0.72) !important;
+    stroke: #ef5e67 !important;
+}
+
+body.home-dashboard-page .svg-zone-label .rate-text {
+    fill: #ffffff !important;
+    text-anchor: middle !important;
+}
+
+@media (max-width: 1280px) {
+    body.home-dashboard-page .home-map-column .plantation-map-shell {
+        height: auto !important;
+        min-height: 530px !important;
+    }
+
+    body.home-dashboard-page .home-map-column .plantation-map-canvas,
+    body.home-dashboard-page .zone-detail-panel {
+        height: 530px !important;
+        min-height: 530px !important;
+    }
+
+    body.home-dashboard-page .home-insight-column {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        grid-template-rows: 260px !important;
+    }
+}
+
+
+
+/* =========================================================
+   FINAL SEVERITY RULE UPDATE
+   Low  = weed coverage below 5%
+   High = weed coverage 5% and above
+========================================================= */
+
+/* Zone map no longer uses a Moderate business category. */
+body.home-dashboard-page
+.svg-zone.moderate,
+body.home-dashboard-page
+.home-zone-bar-fill.moderate {
+    fill: #d94b5b !important;
+    background: #d94b5b !important;
+}
+
+
+/* ---------------------------------------------------------
+   SEVERITY DONUT — FIXED TWO-CATEGORY PARAMETER
+   The previous global style used Low + Moderate + High and
+   also gave ::after a fixed width/height. That caused the
+   inner white circle to render incorrectly at dashboard size.
+--------------------------------------------------------- */
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut {
+    --low-value: 0%;
+    --high-value: 0%;
+
+    position: relative !important;
+
+    width: 108px !important;
+    height: 108px !important;
+
+    display: grid !important;
+    place-items: center !important;
+
+    margin: 0 auto !important;
+
+    border-radius: 50% !important;
+
+    background:
+        conic-gradient(
+            #2f9a52 0 var(--low-value),
+            #d94b5b var(--low-value) 100%
+        ) !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut::after {
+    content: "" !important;
+
+    position: absolute !important;
+
+    inset: 22px !important;
+
+    width: auto !important;
+    height: auto !important;
+
+    border-radius: 50% !important;
+
+    background: #ffffff !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut > div {
+    position: relative !important;
+    z-index: 2 !important;
+
+    text-align: center !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut strong {
+    display: block !important;
+
+    color: var(--iw-deep-green) !important;
+
+    font-size: 18px !important;
+    line-height: 1 !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut span {
+    display: block !important;
+
+    margin-top: 3px !important;
+
+    color: var(--iw-muted) !important;
+
+    font-size: 6px !important;
+}
+
+
+/* Two-row legend only */
+body.home-dashboard-page
+.home-severity-legend {
+    display: grid !important;
+
+    gap: 8px !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend > div {
+    display: grid !important;
+
+    grid-template-columns:
+        9px
+        minmax(0, 1fr)
+        auto !important;
+
+    gap: 7px !important;
+
+    align-items: center !important;
+
+    padding: 7px 0 !important;
+
+    border-bottom:
+        1px solid
+        #edf1ee !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend > div:last-child {
+    border-bottom: 0 !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend .low span {
+    background: #2f9a52 !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend .high span {
+    background: #d94b5b !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend b,
+body.home-dashboard-page
+.home-severity-legend strong {
+    font-size: 7.2px !important;
+}
+
+
+/* ---------------------------------------------------------
+   ZONE DETAIL PANEL — improve readability
+--------------------------------------------------------- */
+
+body.home-dashboard-page
+.zone-detail-panel {
+    background: #ffffff !important;
+}
+
+body.home-dashboard-page
+.zone-detail-header {
+    padding: 12px 14px !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0f653f,
+            #17864f
+        ) !important;
+}
+
+body.home-dashboard-page
+.zone-detail-header h3 {
+    color: #ffffff !important;
+
+    font-size: 11.5px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-body {
+    padding: 10px 14px 13px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-row {
+    grid-template-columns:
+        minmax(92px, 0.9fr)
+        minmax(0, 1.1fr) !important;
+
+    gap: 12px !important;
+
+    padding: 8px 0 !important;
+}
+
+body.home-dashboard-page
+.zone-detail-row span {
+    color: var(--iw-muted) !important;
+
+    font-size: 6.8px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-row strong {
+    color: var(--iw-deep-green) !important;
+
+    font-size: 7.2px !important;
+    line-height: 1.35 !important;
+
+    text-align: right !important;
+}
+
+body.home-dashboard-page
+.zone-detail-button {
+    min-height: 34px !important;
+
+    margin-top: 9px !important;
+
+    font-size: 6.8px !important;
+}
+
+
+/* High zones should be visually red in the map / bar context. */
+body.home-dashboard-page
+.svg-zone.high {
+    fill: rgba(213, 63, 79, 0.72) !important;
+}
+
+body.home-dashboard-page
+.home-zone-bar-fill.high {
+    background: #d94b5b !important;
+}
+
+
+/* Remove any Moderate legend remnants that might come from
+   older shared CSS. */
+body.home-dashboard-page
+.home-severity-legend .moderate {
+    display: none !important;
+}
+
+
+/* =========================================================
+   HOME DASHBOARD — ACCESSIBLE OVERVIEW SIZE
+   Final overrides improve executive-dashboard readability
+   without changing the page structure.
+========================================================= */
+
+/* Give Zone Details enough width for readable values. */
+body.home-dashboard-page
+.home-map-column
+.plantation-map-shell {
+    grid-template-columns:
+        minmax(0, 1.48fr)
+        minmax(230px, 0.64fr) !important;
+}
+
+body.home-dashboard-page
+.zone-detail-header {
+    padding: 14px 16px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-header h3 {
+    font-size: 14px !important;
+    line-height: 1.25 !important;
+}
+
+body.home-dashboard-page
+.zone-detail-body {
+    padding: 12px 16px 15px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-row {
+    grid-template-columns:
+        minmax(105px, 0.95fr)
+        minmax(0, 1.05fr) !important;
+
+    gap: 12px !important;
+    padding: 9px 0 !important;
+}
+
+body.home-dashboard-page
+.zone-detail-row span {
+    font-size: 9px !important;
+    line-height: 1.35 !important;
+}
+
+body.home-dashboard-page
+.zone-detail-row strong {
+    font-size: 9.5px !important;
+    line-height: 1.4 !important;
+}
+
+body.home-dashboard-page
+#zoneRecommendation {
+    font-size: 9px !important;
+    line-height: 1.45 !important;
+}
+
+body.home-dashboard-page
+.zone-detail-button {
+    min-height: 39px !important;
+    font-size: 9px !important;
+}
+
+/* Severity Distribution and Treatment Priority cards. */
+body.home-dashboard-page
+.home-insight-card {
+    padding: 15px 17px !important;
+}
+
+body.home-dashboard-page
+.home-card-heading {
+    margin-bottom: 11px !important;
+}
+
+body.home-dashboard-page
+.home-card-heading h2 {
+    font-size: 16px !important;
+    line-height: 1.25 !important;
+}
+
+body.home-dashboard-page
+.home-card-heading .page-label {
+    font-size: 8.5px !important;
+}
+
+body.home-dashboard-page
+.home-card-heading a {
+    font-size: 8px !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout {
+    grid-template-columns:
+        118px
+        minmax(0, 1fr) !important;
+
+    gap: 15px !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut {
+    width: 116px !important;
+    height: 116px !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut strong {
+    font-size: 21px !important;
+}
+
+body.home-dashboard-page
+.home-severity-layout
+.severity-donut span {
+    font-size: 7.5px !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend b,
+body.home-dashboard-page
+.home-severity-legend strong {
+    font-size: 9px !important;
+}
+
+body.home-dashboard-page
+.home-zone-bars {
+    gap: 10px !important;
+}
+
+body.home-dashboard-page
+.home-zone-bar-row {
+    grid-template-columns:
+        52px
+        minmax(0, 1fr)
+        44px !important;
+
+    gap: 9px !important;
+}
+
+body.home-dashboard-page
+.home-zone-bar-row > span,
+body.home-dashboard-page
+.home-zone-bar-row > strong {
+    font-size: 8.5px !important;
+}
+
+body.home-dashboard-page
+.home-zone-bar-track {
+    height: 10px !important;
+}
+
+/* Management focus remains compact but legible. */
+body.home-dashboard-page
+.home-management-action span {
+    font-size: 8px !important;
+}
+
+body.home-dashboard-page
+.home-management-action strong {
+    font-size: 9px !important;
+    line-height: 1.45 !important;
+}
+
+body.home-dashboard-page
+.home-management-action a {
+    font-size: 8px !important;
+}
+
+/* Keep the original stacked behaviour on narrower screens. */
+@media (max-width: 1180px) {
+    body.home-dashboard-page
+    .home-map-column
+    .plantation-map-shell {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+
+/* =========================================================
+   FINAL ZONE DETAILS READABILITY AND TWO-CARD OVERVIEW
+========================================================= */
+
+/* Management Focus was removed; share the column evenly. */
+body.home-dashboard-page
+.home-insight-column {
+    grid-template-rows:
+        repeat(2, minmax(0, 1fr)) !important;
+
+    gap: 12px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-header {
+    padding: 15px 17px !important;
+}
+
+body.home-dashboard-page
+.zone-detail-header h3 {
+    color: #ffffff !important;
+    font-size: 15.5px !important;
+    font-weight: 800 !important;
+    line-height: 1.25 !important;
+}
+
+body.home-dashboard-page
+.zone-detail-body {
+    padding: 13px 17px 16px !important;
+}
+
+/* =========================================================
+   FINAL COMPACT HEIGHT AND WORKLOAD COLOUR OVERRIDE
+========================================================= */
+
+body.home-dashboard-page .home-management-grid {
+    align-items: start !important;
+}
+
+body.home-dashboard-page .home-map-column .plantation-map-shell,
+body.home-dashboard-page .home-map-column .plantation-map-canvas,
+body.home-dashboard-page .zone-detail-panel {
+    height: 530px !important;
+    min-height: 530px !important;
+}
+
+body.home-dashboard-page .plantation-svg-map,
+body.home-dashboard-page .zone-map-svg {
+    height: 445px !important;
+    min-height: 445px !important;
+}
+
+body.home-dashboard-page .zone-detail-body {
+    height: 478px !important;
+    min-height: 478px !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+body.home-dashboard-page .zone-detail-button {
+    margin-top: auto !important;
+}
+
+body.home-dashboard-page .home-insight-column {
+    height: 530px !important;
+    grid-template-rows: 214px 306px !important;
+    gap: 10px !important;
+}
+
+body.home-dashboard-page .svg-zone.workload-none {
+    fill: rgba(31, 142, 74, 0.56) !important;
+    stroke: #51d278 !important;
+}
+
+body.home-dashboard-page .svg-zone.workload-low {
+    fill: rgba(221, 190, 51, 0.68) !important;
+    stroke: #f2d14f !important;
+}
+
+body.home-dashboard-page .svg-zone.workload-medium {
+    fill: rgba(224, 123, 38, 0.68) !important;
+    stroke: #f29a4a !important;
+}
+
+body.home-dashboard-page .svg-zone.workload-high {
+    fill: rgba(177, 48, 54, 0.72) !important;
+    stroke: #ef5e67 !important;
+}
+
+body.home-dashboard-page .home-zone-bar-fill.workload-none {
+    background: #23894d !important;
+}
+
+body.home-dashboard-page .home-zone-bar-fill.workload-low {
+    background: #d6b735 !important;
+}
+
+body.home-dashboard-page .home-zone-bar-fill.workload-medium {
+    background: #df7927 !important;
+}
+
+body.home-dashboard-page .home-zone-bar-fill.workload-high {
+    background: #c64048 !important;
+}
+
+body.home-dashboard-page .home-zone-bar-row {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    gap: 3px 8px !important;
+}
+
+body.home-dashboard-page .home-zone-bar-heading {
+    grid-column: 1 / -1 !important;
+    display: flex !important;
+    align-items: baseline !important;
+    justify-content: space-between !important;
+}
+
+body.home-dashboard-page .home-zone-bar-heading span {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+}
+
+body.home-dashboard-page .home-zone-bar-heading strong {
+    font-size: 12px !important;
+    font-weight: 800 !important;
+}
+
+body.home-dashboard-page .home-zone-bar-track,
+body.home-dashboard-page .home-zone-bar-row > small {
+    grid-column: 1 / -1 !important;
+}
+
+body.home-dashboard-page .home-zone-bar-track {
+    height: 8px !important;
+}
+
+body.home-dashboard-page .home-zone-bar-row > small {
+    font-size: 8px !important;
+    line-height: 1.25 !important;
+}
+
+/* Four-card KPI row and interaction refinements */
+body.home-dashboard-page .home-executive-kpis {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+}
+
+body.home-dashboard-page .home-kpi-card {
+    min-height: 82px !important;
+}
+
+body.home-dashboard-page .home-kpi-card small {
+    display: none !important;
+}
+
+body.home-dashboard-page .home-severity-layout {
+    flex: 1 1 auto !important;
+    min-height: 132px !important;
+    overflow: visible !important;
+}
+
+body.home-dashboard-page .home-insight-card:first-of-type {
+    overflow: visible !important;
+}
+
+body.home-dashboard-page .home-severity-layout .severity-donut {
+    width: 116px !important;
+    height: 116px !important;
+    flex: 0 0 116px !important;
+}
+
+body.home-dashboard-page .home-severity-layout .severity-donut::after {
+    inset: 21px !important;
+}
+
+body.home-dashboard-page .home-severity-legend {
+    min-width: 0 !important;
+}
+
+body.home-dashboard-page .svg-zone-group {
+    cursor: pointer !important;
+}
+
+body.home-dashboard-page .svg-zone-group .svg-zone {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition:
+        fill-opacity 180ms ease,
+        stroke-width 180ms ease,
+        filter 180ms ease,
+        opacity 180ms ease;
+}
+
+body.home-dashboard-page .svg-zone-group .svg-zone-label {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: transform 180ms ease;
+}
+
+body.home-dashboard-page .svg-zone-group:hover .svg-zone {
+    fill-opacity: 0.92 !important;
+    stroke-width: 5px !important;
+    filter:
+        brightness(1.12)
+        drop-shadow(0 0 7px rgba(255, 255, 255, 0.48)) !important;
+}
+
+body.home-dashboard-page .svg-zone-group.selected .svg-zone {
+    fill-opacity: 0.88 !important;
+    stroke-width: 5px !important;
+    filter:
+        brightness(1.08)
+        drop-shadow(0 0 5px rgba(255, 255, 255, 0.38)) !important;
+}
+
+body.home-dashboard-page .svg-zone-group.hovered .svg-zone,
+body.home-dashboard-page .svg-zone-group:hover .svg-zone {
+    stroke: #ffffff !important;
+    stroke-width: 5px !important;
+    filter:
+        brightness(1.12)
+        drop-shadow(0 0 7px rgba(255, 255, 255, 0.48)) !important;
+}
+
+/* =========================================================
+   FINAL KPI AND SEVERITY CARD OVERRIDES
+========================================================= */
+
+body.home-dashboard-page .home-executive-kpis {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+}
+
+body.home-dashboard-page .home-kpi-card {
+    min-height: 78px !important;
+}
+
+body.home-dashboard-page .home-kpi-card small,
+body.home-dashboard-page .home-kpi-card > small {
+    display: none !important;
+}
+
+body.home-dashboard-page .home-insight-column {
+    height: 530px !important;
+    grid-template-rows: 260px 260px !important;
+    overflow: visible !important;
+}
+
+body.home-dashboard-page .home-insight-card {
+    overflow: visible !important;
+}
+
+body.home-dashboard-page .home-insight-card:nth-of-type(1) {
+    min-height: 260px !important;
+}
+
+body.home-dashboard-page .home-card-heading {
+    margin-bottom: 8px !important;
+}
+
+body.home-dashboard-page .home-severity-layout {
+    flex: 1 1 auto !important;
+    min-height: 150px !important;
+    grid-template-columns: 118px minmax(0, 1fr) !important;
+    align-items: center !important;
+    overflow: visible !important;
+}
+
+body.home-dashboard-page .home-severity-layout .severity-donut {
+    width: 116px !important;
+    height: 116px !important;
+}
+
+body.home-dashboard-page .home-severity-layout .severity-donut::after {
+    inset: 21px !important;
+}
+
+body.home-dashboard-page .svg-zone-group,
+body.home-dashboard-page .svg-zone-group polygon,
+body.home-dashboard-page .svg-zone-group text {
+    cursor: pointer !important;
+}
+
+body.home-dashboard-page .svg-zone-group .svg-zone,
+body.home-dashboard-page .svg-zone-group .svg-zone-label {
+    transition:
+        opacity 180ms ease,
+        fill-opacity 180ms ease,
+        stroke-width 180ms ease,
+        filter 180ms ease,
+        transform 180ms ease;
+}
+
+body.home-dashboard-page .svg-zone-group .svg-zone-label {
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+body.home-dashboard-page .svg-zone-group:hover .svg-zone {
+    fill-opacity: 0.92 !important;
+    stroke: #ffffff !important;
+    stroke-width: 5px !important;
+    opacity: 1 !important;
+    filter:
+        brightness(1.12)
+        drop-shadow(0 0 7px rgba(255, 255, 255, 0.48)) !important;
+}
+
+body.home-dashboard-page .svg-zone-group.selected .svg-zone {
+    fill-opacity: 0.88 !important;
+    stroke: #ffffff !important;
+    stroke-width: 5px !important;
+    filter:
+        brightness(1.08)
+        drop-shadow(0 0 5px rgba(255, 255, 255, 0.38)) !important;
+}
+
+body.home-dashboard-page
+.zone-detail-row {
+    grid-template-columns:
+        minmax(112px, 0.95fr)
+        minmax(0, 1.05fr) !important;
+
+    gap: 13px !important;
+    padding: 10px 0 !important;
+    border-bottom-color: #d5e1da !important;
+}
+
+body.home-dashboard-page
+.zone-detail-row span {
+    color: #36594b !important;
+    font-size: 10.5px !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+}
+
+body.home-dashboard-page
+.zone-detail-row strong {
+    color: #063d2e !important;
+    font-size: 11.5px !important;
+    font-weight: 800 !important;
+    line-height: 1.4 !important;
+}
+
+body.home-dashboard-page
+#zoneRecommendation {
+    color: #063d2e !important;
+    font-size: 10.5px !important;
+    font-weight: 700 !important;
+    line-height: 1.48 !important;
+}
+
+body.home-dashboard-page
+.zone-detail-button {
+    min-height: 42px !important;
+    font-size: 10px !important;
+    font-weight: 800 !important;
+}
+
+/* Clean enterprise SaaS dashboard surface */
+body.home-dashboard-page .home-kpi-card,
+body.home-dashboard-page .home-insight-card,
+body.home-dashboard-page .zone-detail-panel,
+body.home-dashboard-page .plantation-map-canvas {
+    background: #FFFFFF !important;
+    border: 1px solid #DDE4DF !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 14px rgba(23,35,29,0.035) !important;
+}
+
+body.home-dashboard-page .home-kpi-card {
+    min-height: 92px !important;
+    background: #FFFFFF !important;
+}
+
+body.home-dashboard-page .home-kpi-icon {
+    border: 0 !important;
+    background: #E8F3EA !important;
+    color: #0B5D46 !important;
+}
+
+body.home-dashboard-page .home-kpi-icon svg,
+body.treatment-planning-page .treatment-overview-kpi-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+body.home-dashboard-page .home-kpi-card::after {
+    content: none !important;
+}
+
+body.home-dashboard-page .home-kpi-card span {
+    color: #66736D !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+}
+
+body.home-dashboard-page .home-kpi-card strong {
+    color: #17231D !important;
+    font-size: 32px !important;
+}
+
+body.home-dashboard-page .zone-detail-header {
+    padding: 14px 17px !important;
+    border-bottom: 1px solid #DDE4DF !important;
+    background: #FFFFFF !important;
+}
+
+body.home-dashboard-page .zone-detail-header h3 {
+    color: #17231D !important;
+}
+
+
+/* =========================================================
+   SEVERITY LEGEND READABILITY
+========================================================= */
+
+body.home-dashboard-page
+.home-severity-legend {
+    gap: 10px !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend > div {
+    grid-template-columns:
+        12px
+        minmax(0, 1fr)
+        auto !important;
+
+    gap: 10px !important;
+    padding: 10px 0 !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend > div > span {
+    width: 12px !important;
+    height: 12px !important;
+}
+
+/* =========================================================
+   FINAL RIGHT-COLUMN HEIGHT AND ZONE ROW FIT
+========================================================= */
+
+body.home-dashboard-page .home-insight-column {
+    height: 530px !important;
+    grid-template-rows: 220px 300px !important;
+    gap: 10px !important;
+    overflow: visible !important;
+}
+
+body.home-dashboard-page .home-insight-card {
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+}
+
+body.home-dashboard-page .home-insight-card:nth-of-type(1) {
+    grid-row: 1 !important;
+    height: 220px !important;
+    min-height: 220px !important;
+}
+
+body.home-dashboard-page .home-insight-card:nth-of-type(2) {
+    grid-row: 2 !important;
+    height: 300px !important;
+    min-height: 300px !important;
+}
+
+body.home-dashboard-page .home-insight-card:nth-of-type(1) {
+    min-height: 220px !important;
+}
+
+body.home-dashboard-page .home-card-heading {
+    margin-bottom: 6px !important;
+}
+
+body.home-dashboard-page .home-severity-layout {
+    min-height: 138px !important;
+}
+
+body.home-dashboard-page .home-severity-layout .severity-donut {
+    width: 108px !important;
+    height: 108px !important;
+}
+
+body.home-dashboard-page .home-severity-layout .severity-donut::after {
+    inset: 20px !important;
+}
+
+body.home-dashboard-page .home-severity-legend {
+    gap: 7px !important;
+}
+
+body.home-dashboard-page .home-zone-bars {
+    flex: 1 1 auto !important;
+    align-content: stretch !important;
+    grid-template-rows: repeat(5, minmax(0, 1fr)) !important;
+    gap: 3px !important;
+}
+
+body.home-dashboard-page .home-zone-bar-row {
+    min-height: 0 !important;
+    align-content: center !important;
+    gap: 2px 8px !important;
+}
+
+body.home-dashboard-page .home-zone-bar-heading {
+    line-height: 1.05 !important;
+}
+
+body.home-dashboard-page .home-zone-bar-heading span,
+body.home-dashboard-page .home-zone-bar-heading strong {
+    font-size: 9.5px !important;
+}
+
+body.home-dashboard-page .home-zone-bar-track {
+    height: 6px !important;
+}
+
+body.home-dashboard-page .home-zone-bar-row > small {
+    font-size: 7.5px !important;
+    line-height: 1.12 !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend b {
+    color: #153f32 !important;
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+}
+
+body.home-dashboard-page
+.home-severity-legend strong {
+    color: #063d2e !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    line-height: 1.2 !important;
+}
+
+/* =========================================================
+   PLANTATION MAP BACKGROUND - FINAL FIX
+========================================================= */
+
+body.home-dashboard-page
+.plantation-map-canvas {
+    position: relative !important;
+
+    isolation: isolate !important;
+
+    background-color: #174c34 !important;
+
+    background-image:
+        linear-gradient(
+            rgba(5, 40, 25, 0.08),
+            rgba(5, 40, 25, 0.08)
+        ),
+        url("../images/plantation-map-bg.png") !important;
+
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+}
+
+body.home-dashboard-page
+.plantation-map-title,
+body.home-dashboard-page
+.plantation-svg-map {
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+/* Clean page heading and Inter typography */
+body.home-dashboard-page .dashboard-page-header {
+    min-height: 0 !important;
+    margin-bottom: 28px !important;
+    padding: 4px 0 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    color: var(--iw-deep-green) !important;
+    background: none !important;
+    box-shadow: none !important;
+}
+
+body.home-dashboard-page .dashboard-page-header::after {
+    content: none !important;
+}
+
+body.home-dashboard-page .dashboard-page-header h1 {
+    margin: 0 0 8px !important;
+    color: var(--iw-deep-green) !important;
+    font-size: 34px !important;
+    font-weight: 700 !important;
+    line-height: 1.12 !important;
+}
+
+body.home-dashboard-page .dashboard-page-header p:not(.page-label) {
+    max-width: 760px;
+    margin: 0 !important;
+    color: #66736d !important;
+    font-size: 14px !important;
+    line-height: 1.55 !important;
+}
+
+body.home-dashboard-page .header-user,
+body.home-dashboard-page .dashboard-page-header .header-user {
+    display: none !important;
+}
+
+/* Dashboard readability pass */
+body.home-dashboard-page .dashboard-page-header p:not(.page-label) {
+    font-size: 16px !important;
+}
+
+body.home-dashboard-page .home-management-grid {
+    --dashboard-layout-height: 564px;
+    --dashboard-severity-height: 208px;
+    --dashboard-insight-gap: 10px;
+    height: var(--dashboard-layout-height) !important;
+    min-height: var(--dashboard-layout-height) !important;
+    grid-template-rows: minmax(0, 1fr) !important;
+    align-items: stretch !important;
+}
+
+body.home-dashboard-page .home-map-column {
+    height: 100% !important;
+    min-height: 0 !important;
+}
+
+body.home-dashboard-page .home-map-column .plantation-map-shell,
+body.home-dashboard-page .home-map-column .plantation-map-canvas,
+body.home-dashboard-page .zone-detail-panel {
+    height: 100% !important;
+    min-height: 0 !important;
+}
+
+body.home-dashboard-page .home-map-column .plantation-map-shell {
+    grid-template-columns: minmax(0, 1.55fr) minmax(270px, 0.95fr) !important;
+    gap: 14px !important;
+    overflow: visible !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+body.home-dashboard-page .home-map-column .plantation-map-canvas {
+    border-radius: 12px !important;
+}
+
+body.home-dashboard-page .zone-detail-panel {
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    border-radius: 12px !important;
+}
+
+body.home-dashboard-page .zone-detail-header {
+    flex: 0 0 auto !important;
+    border-top-left-radius: 12px !important;
+    border-top-right-radius: 12px !important;
+}
+
+body.home-dashboard-page .zone-detail-body {
+    height: auto !important;
+    min-height: 0 !important;
+    flex: 1 1 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+body.home-dashboard-page .zone-detail-button {
+    margin-top: auto !important;
+}
+
+body.home-dashboard-page .plantation-svg-map,
+body.home-dashboard-page .zone-map-svg {
+    height: 448px !important;
+    min-height: 0 !important;
+}
+
+body.home-dashboard-page .zone-detail-body {
+    height: 468px !important;
+    min-height: 0 !important;
+}
+
+body.home-dashboard-page .plantation-map-title h2 {
+    font-size: 20px !important;
+    line-height: 1.25 !important;
+}
+
+body.home-dashboard-page .plantation-map-title {
+    align-items: flex-start !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    margin-bottom: 8px !important;
+}
+
+body.home-dashboard-page .plantation-map-title h2,
+body.home-dashboard-page .plantation-map-title span {
+    width: 100% !important;
+}
+
+body.home-dashboard-page .plantation-map-title span {
+    color: #f3f6f4 !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+body.home-dashboard-page .plantation-map-title span::selection {
+    color: inherit;
+    background: transparent;
+}
+
+body.home-dashboard-page .zone-detail-header h3 {
+    font-size: 18px !important;
+}
+
+body.home-dashboard-page .zone-detail-row span {
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+}
+
+body.home-dashboard-page .zone-detail-row {
+    align-items: flex-start !important;
+}
+
+body.home-dashboard-page .zone-detail-row span {
+    flex: 0 0 120px !important;
+}
+
+body.home-dashboard-page .zone-detail-row strong {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+}
+
+body.home-dashboard-page .zone-detail-row strong,
+body.home-dashboard-page #zoneRecommendation {
+    font-size: 15px !important;
+    line-height: 1.45 !important;
+}
+
+body.home-dashboard-page .zone-detail-button {
+    font-size: 14px !important;
+}
+
+body.home-dashboard-page .home-insight-column {
+    height: 100% !important;
+    grid-template-rows:
+        var(--dashboard-severity-height)
+        minmax(
+            0,
+            calc(
+                var(--dashboard-layout-height) -
+                var(--dashboard-severity-height) -
+                var(--dashboard-insight-gap)
+            )
+        ) !important;
+    gap: var(--dashboard-insight-gap) !important;
+}
+
+body.home-dashboard-page .home-insight-card {
+    padding: 15px 17px !important;
+    min-height: 0 !important;
+    height: auto !important;
+}
+
+body.home-dashboard-page .home-card-heading {
+    margin-bottom: 8px !important;
+}
+
+body.home-dashboard-page .home-insight-card:nth-of-type(2) {
+    padding-top: 17px !important;
+    padding-bottom: 17px !important;
+}
+
+body.home-dashboard-page .home-insight-card:nth-of-type(2) .home-card-heading {
+    margin-bottom: 10px !important;
+}
+
+body.home-dashboard-page .home-card-heading .page-label {
+    color: #8c4b0a !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.06em !important;
+}
+
+body.home-dashboard-page .home-card-heading h2 {
+    font-size: 20px !important;
+    line-height: 1.25 !important;
+}
+
+body.home-dashboard-page .home-card-heading small {
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+}
+
+body.home-dashboard-page .home-severity-layout {
+    min-height: 0 !important;
+}
+
+body.home-dashboard-page .home-severity-layout .severity-donut strong {
+    font-size: 22px !important;
+}
+
+body.home-dashboard-page .home-severity-layout .severity-donut span {
+    font-size: 13px !important;
+}
+
+body.home-dashboard-page .home-severity-legend b {
+    font-size: 15px !important;
+    line-height: 1.3 !important;
+}
+
+body.home-dashboard-page .home-severity-legend strong {
+    font-size: 16px !important;
+    line-height: 1.2 !important;
+}
+
+body.home-dashboard-page .home-zone-bars {
+    gap: 5px !important;
+}
+
+body.home-dashboard-page .home-zone-bar-row {
+    gap: 3px 8px !important;
+}
+
+body.home-dashboard-page .home-zone-bar-heading {
+    line-height: 1.25 !important;
+}
+
+body.home-dashboard-page .home-zone-bar-heading span,
+body.home-dashboard-page .home-zone-bar-heading strong {
+    font-size: 14px !important;
+}
+
+body.home-dashboard-page .home-zone-bar-track {
+    height: 8px !important;
+}
+
+body.home-dashboard-page .home-zone-bar-row > small {
+    font-size: 13px !important;
+    line-height: 1.25 !important;
+}
+
+body.home-dashboard-page .home-insight-column {
+    grid-template-columns: minmax(0, 1fr) !important;
+}
+
+body.home-dashboard-page .home-insight-card:nth-of-type(1) {
+    height: auto !important;
+    min-height: 0 !important;
+}
+
+body.home-dashboard-page .home-insight-card:nth-of-type(2) {
+    height: auto !important;
+    min-height: 0 !important;
+}
+
+@media (max-width: 1280px) {
+    body.home-dashboard-page .home-management-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+        height: auto !important;
+        min-height: 0 !important;
+    }
+
+    body.home-dashboard-page .home-map-column {
+        height: auto !important;
+    }
+
+    body.home-dashboard-page .home-insight-column {
+        height: var(--dashboard-layout-height) !important;
+        grid-template-rows:
+            var(--dashboard-severity-height)
+            minmax(
+                0,
+                calc(
+                    var(--dashboard-layout-height) -
+                    var(--dashboard-severity-height) -
+                    var(--dashboard-insight-gap)
+                )
+            ) !important;
+    }
+}
+
+@media (max-width: 840px) {
+    body.home-dashboard-page .home-map-column .plantation-map-shell {
+        grid-template-columns: minmax(0, 1fr) !important;
+        height: auto !important;
+        min-height: 0 !important;
+    }
+
+    body.home-dashboard-page .home-insight-column {
+        height: var(--dashboard-layout-height) !important;
+    }
+}
+
+body.home-dashboard-page .svg-zone-label .zone-name {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: normal;
+    white-space: nowrap;
+}
+
+body.home-dashboard-page .svg-zone-label .coverage-text {
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: normal;
+    white-space: nowrap;
+}
+
+body.home-dashboard-page .svg-zone-label .coverage-text.no-analysis-count {
+    font-size: 18px;
+}
+
+body.home-dashboard-page .svg-zone-label .rate-text {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: normal;
+    white-space: nowrap;
+}
+
+body.home-dashboard-page .svg-zone-group.selected .svg-zone-label,
+body.home-dashboard-page .svg-zone-group.hovered .svg-zone-label,
+body.home-dashboard-page .svg-zone-group:hover .svg-zone-label {
+    transform: scale(1.01);
+}
+
