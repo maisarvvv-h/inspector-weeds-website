@@ -403,3 +403,4 @@ if __name__ == "__main__":
             "results": [],
             "error": str(error),
         }))
+        sys.exit(1)

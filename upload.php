@@ -1223,6 +1223,28 @@ if ($batchManifestEntries !== []) {
         $analysisResults = is_array($batchAnalysis)
             ? (array) ($batchAnalysis["results"] ?? [])
             : [];
+        $pythonBatchSucceeded =
+            $pythonReturnCode === 0 &&
+            is_array($batchAnalysis) &&
+            ($batchAnalysis["status"] ?? "") === "success";
+        if (!$pythonBatchSucceeded) {
+            $pythonDiagnostic = sprintf(
+                "exit_code=%d top_level_status=%s error=%s output=%s",
+                $pythonReturnCode,
+                (string) ($batchAnalysis["status"] ?? "invalid_or_missing_json"),
+                (string) ($batchAnalysis["error"] ?? ""),
+                implode("\n", $pythonOutput)
+            );
+            error_log(
+                $uploadTimingEnabled
+                    ? "Inspector Weeds Python batch failure: " . $pythonDiagnostic
+                    : sprintf(
+                        "Inspector Weeds Python batch failure: exit_code=%d status=%s",
+                        $pythonReturnCode,
+                        (string) ($batchAnalysis["status"] ?? "invalid_or_missing_json")
+                    )
+            );
+        }
         $processedBatchIds = [];
 
         foreach ($analysisResults as $analysis) {
@@ -1396,14 +1418,21 @@ if ($batchManifestEntries !== []) {
             }
         }
 
-        if ($pythonReturnCode !== 0 && $analysisResults === []) {
-            error_log(
-                "Inspector Weeds batch inference failed. Python return code: " .
-                $pythonReturnCode . "\n" . implode("\n", $pythonOutput)
-            );
-        }
     } else {
-        error_log("Inspector Weeds batch inference could not be started.");
+        $startFailure = sprintf(
+            "manifest_saved=%s manifest_path=%s python_path=%s python_exists=%s script_path=%s script_exists=%s",
+            $manifestSaved ? "yes" : "no",
+            $manifestPath === false ? "unavailable" : $manifestPath,
+            $pythonPath,
+            file_exists($pythonPath) ? "yes" : "no",
+            $scriptPath,
+            file_exists($scriptPath) ? "yes" : "no"
+        );
+        error_log(
+            $uploadTimingEnabled
+                ? "Inspector Weeds batch inference could not be started: " . $startFailure
+                : "Inspector Weeds batch inference could not be started."
+        );
         foreach ($batchManifestEntries as $manifestEntry) {
             $imageId = (string) $manifestEntry["image_id"];
             $failedStatus = mysqli_prepare(
