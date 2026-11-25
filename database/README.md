@@ -105,36 +105,6 @@ The `zone_id` field is unique so that each plantation zone maintains one treatme
 
 ---
 
-### `contact_messages`
-
-Stores messages submitted through the website contact form.
-
-The table records:
-
-- sender name;
-- email address;
-- subject;
-- message; and
-- submission timestamp.
-
----
-
-### `users`
-
-Stores user-account information used by the original application authentication system.
-
-The table contains:
-
-- full name;
-- email;
-- password;
-- user role; and
-- account creation date.
-
-The `email` field is unique.
-
-> The public repository contains only the database structure. Local user records and passwords are not included.
-
 ## Application Data Flow
 
 ```text
