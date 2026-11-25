@@ -4,7 +4,7 @@ AI-powered weed detection and treatment planning for oil palm plantations.
 
 ## Demo
 
-▶ [Watch the full website demo](https://youtu.be/Yz84dOH-UzM?si=Ofmp2W93oiCy1PdR)
+[Watch the full website demo](https://youtu.be/Yz84dOH-UzM?si=Ofmp2W93oiCy1PdR)
 
 ## How It Works
 
