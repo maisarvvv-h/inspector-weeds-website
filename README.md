@@ -13,3 +13,7 @@ Plantation Images
 → Weed Severity Classification
 → Dashboard
 → Treatment Planning
+
+## Note
+
+Built for local deployment using XAMPP, PHP, MySQL, Python, and DeepLabV3+.
